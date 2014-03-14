@@ -48,7 +48,7 @@ public class WumpusMap {
 			
 			// add new object
 			if( object.getObjectsList().size() > 0 ){
-				map.add(object);
+				map.add(object);				
 			}
 			
 			return true;

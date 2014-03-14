@@ -62,6 +62,11 @@ public class MapObject extends JPanel implements MouseListener {
 		
 		// update gui objects
 		updateWumpusGuiObjects();
+		
+		// show logger message
+		if( wumpusMapObject.getObjectsList().size() > 0 ){
+			logger.debug("adding object at " + wumpusMapObject.getRow() + "," + wumpusMapObject.getColumn());
+		}
 	}
 	
 	/**
@@ -112,7 +117,7 @@ public class MapObject extends JPanel implements MouseListener {
 			}
 			else{
 				logger.debug("adding " + tool + " to " + wumpusMapObject.getRow() + "," + wumpusMapObject.getColumn());
-				logger.debug(wumpusMapObject.contains(tool));
+				wumpusMapObject.add(tool);
 			}
 			
 			// update gui panel

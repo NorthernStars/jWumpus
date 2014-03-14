@@ -223,7 +223,6 @@ public class MainFrame extends JFrame {
 			// add objects to map
 			for( int row=0; row<map.getRows(); row++ ){
 				for( int column=0; column<map.getColumns(); column++ ){
-					logger.debug("adding object at " + row + "," + column);
 					panel.add( new MapObject(editor, map, map.getWumpusMapObject(row, column)) );
 				}
 			}

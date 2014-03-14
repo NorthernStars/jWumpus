@@ -7,16 +7,16 @@ package de.northernstars.jwumpus.core;
  */
 public enum WumpusObjects {
 	
-	PLAYER (""),
+	PLAYER ("/de/northernstars/jwumpus/gui/img/player.png"),
 	WUMPUS ("/de/northernstars/jwumpus/gui/img/wumpus.png"),
 	GOLD ("/de/northernstars/jwumpus/gui/img/gold.png"),
 	
-	TRAP (""),
-	BREEZE (""),
-	STENCH (""),
-	TWINKLE (""),
+	TRAP ("/de/northernstars/jwumpus/gui/img/trap.png"),
+	BREEZE ("/de/northernstars/jwumpus/gui/img/breeze.png"),
+	STENCH ("/de/northernstars/jwumpus/gui/img/stench.png"),
+	TWINKLE ("/de/northernstars/jwumpus/gui/img/twinkle.png"),
 	
-	DELETE (null);
+	DELETE ("/de/northernstars/jwumpus/gui/img/delete.png");
 	
 	public String imgRescource;
 	
