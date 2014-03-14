@@ -40,15 +40,15 @@ public class Editor extends JFrame {
 	
 	private static final Logger logger = LogManager.getLogger(Editor.class);
 	
-	private static WumpusMap map = null;
-	private static File mapFile = null;
-	private static WumpusObjects selectedTool = null;
+	private WumpusMap map = null;
+	private File mapFile = null;
+	private WumpusObjects selectedTool = null;
 	
 	private JPanel contentPane;
 	private static JPanel panelMap;
 	private JPanel panelPalette;
-	private JTextField txtColumns;
-	private JTextField txtRows;
+	private static JTextField txtColumns;
+	private static JTextField txtRows;
 	public JMenuBar menuBar;
 	public JMenu mnFile;
 	public JMenuItem mntmNewMap;
@@ -73,6 +73,12 @@ public class Editor extends JFrame {
 		});
 	}
 	
+	public Editor(WumpusMap wumpusMap){
+		super();
+		map = wumpusMap;
+		updateGuiMap();
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -81,7 +87,7 @@ public class Editor extends JFrame {
 		setTitle("Map editor");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Editor.class.getResource("/de/northernstars/jwumpus/gui/img/map.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
+		setBounds(100, 100, 800, 650);
 		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -101,6 +107,10 @@ public class Editor extends JFrame {
 		mnFile.add(mntmLoadMap);
 		
 		mntmSaveMap = new JMenuItem("Save map");
+		mntmSaveMap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		mnFile.add(mntmSaveMap);
 		
 		mntmSaveMapAs = new JMenuItem("Save map as");
@@ -149,23 +159,34 @@ public class Editor extends JFrame {
 		
 		JLabel lblNewLabel1 = new JLabel("Columns:");
 		lblNewLabel1.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelMapSize.add(lblNewLabel1, "2, 2, right, default");
+		panelMapSize.add(lblNewLabel1, "2, 4, right, default");
 		
 		txtColumns = new JTextField();
 		txtColumns.setText("5");
-		panelMapSize.add(txtColumns, "4, 2, fill, default");
+		panelMapSize.add(txtColumns, "4, 4, fill, default");
 		txtColumns.setColumns(3);
 		
 		JLabel lblNewLabel2 = new JLabel("Rows:");
 		lblNewLabel2.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelMapSize.add(lblNewLabel2, "2, 4, right, default");
+		panelMapSize.add(lblNewLabel2, "2, 2, right, default");
 		
 		txtRows = new JTextField();
 		txtRows.setText("5");
-		panelMapSize.add(txtRows, "4, 4, fill, default");
+		panelMapSize.add(txtRows, "4, 2, fill, default");
 		txtRows.setColumns(3);
 		
 		btnUpdateMapSize = new JButton("Update map size");
+		btnUpdateMapSize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int mapDimension[] = getMapDimensionFromGui();
+				if( map != null
+						&& mapDimension[0] > 0 && mapDimension[1] > 0 ){
+					map.setRows(mapDimension[0]);
+					map.setColumns(mapDimension[1]);
+					updateGuiMap();
+				}
+			}
+		});
 		panelMapSize.add(btnUpdateMapSize, "2, 6, 3, 1");
 		
 		panelPalette = new JPanel();
@@ -191,7 +212,7 @@ public class Editor extends JFrame {
 		
 		for( WumpusObjects tool : WumpusObjects.values() ){			
 			// add new PaletteButton to gui panel
-			panelPalette.add( new PaletteButton(tool) );
+			panelPalette.add( new PaletteButton(this, tool) );
 		}
 		
 		// update gui panel
@@ -200,48 +221,52 @@ public class Editor extends JFrame {
 	}
 	
 	/**
-	 * Creates a new map
+	 * @return {@link Integer} array {@code [rows, cloumns]} with dimension of map, set in gui.
 	 */
-	private void newMap(){
+	private int[] getMapDimensionFromGui(){
 		try{
-			
-			// create new map
 			int rows = Integer.parseInt(txtRows.getText());
 			int columns = Integer.parseInt(txtColumns.getText());
-			map = new WumpusMap(rows, columns);
-			
-			logger.debug("Creating new map with " + rows +" rows and " + columns + " columns.");
-			
-			// update gui
-			updateGuiMap();
-			
+			return new int[]{rows, columns};
 		}catch (NumberFormatException e){
 			logger.error("Rows or columns field contains no integer value.");
 		}
+		
+		return new int[]{0,0};
+	}
+	
+	/**
+	 * Creates a new map
+	 */
+	private void newMap(){
+		// create new map
+		int mapDimension[] = getMapDimensionFromGui();
+		map = new WumpusMap(mapDimension[0], mapDimension[1]);		
+		logger.debug("Created new map with " + mapDimension[0] +" rows and " + mapDimension[1] + " columns.");
+		
+		// update gui
+		updateGuiMap();
+	}
+	
+	/**
+	 * Saves map
+	 */
+	private void saveMap(){
+		
 	}
 	
 	/**
 	 * Updates the current map on gui
 	 */
-	public static void updateGuiMap(){
+	public void updateGuiMap(){
 		if( map != null ){
-			logger.debug("Updating map: " + map.getMapName());
 			
-			// clear gui map
-			panelMap.removeAll();
+			// show map dimension
+			txtRows.setText( Integer.toString(map.getRows()) );
+			txtColumns.setText( Integer.toString(map.getColumns()) );
 			
-			// set new grid
-			panelMap.setLayout(new GridLayout(map.getRows(), map.getColumns(), 0, 0));
-			
-			// add objects to map
-			for( int row=0; row<map.getRows(); row++ ){
-				for( int column=0; column<map.getColumns(); column++ ){
-					panelMap.add( new MapObject(map.getWumpusMapObject(row, column)) );
-				}
-			}
-			
-			// redraw gui map panel
-			panelMap.validate();			
+			// update gui map
+			MainFrame.updateGuiMap(this, map, panelMap);
 		}
 	}
 	
@@ -249,14 +274,14 @@ public class Editor extends JFrame {
 	 * Sets the {@code WumpusObjects} tool selected from palette panel
 	 * @param tool
 	 */
-	public static void setTool(WumpusObjects tool){
+	public void setTool(WumpusObjects tool){
 		selectedTool = tool;
 	}
 	
 	/**
 	 * @return Currently selected {@code WumpusObjects} tool or {@code null} if no tool selected
 	 */
-	public static WumpusObjects getTool(){
+	public WumpusObjects getTool(){
 		return selectedTool;
 	}
 

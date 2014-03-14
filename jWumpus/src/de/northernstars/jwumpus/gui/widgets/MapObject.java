@@ -11,6 +11,7 @@ import javax.swing.border.LineBorder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.northernstars.jwumpus.core.WumpusMap;
 import de.northernstars.jwumpus.core.WumpusMapObject;
 import de.northernstars.jwumpus.core.WumpusObjects;
 import de.northernstars.jwumpus.gui.Editor;
@@ -24,15 +25,30 @@ import de.northernstars.jwumpus.gui.Editor;
 public class MapObject extends JPanel implements MouseListener {
 
 	private static final Logger logger = LogManager.getLogger(MapObject.class);
+	private Editor editor;
+	private WumpusMap map;
 	private WumpusMapObject wumpusMapObject;
 	
 	/**
-	 * Conscturctor
-	 * @param wumpusMapObject
+	 * Consturctor for non-editable MapObject
+	 * @param map				{@link WumpusMap} of {@link WumpusMapObject}
+	 * @param wumpusMapObject	{@link WumpusMapObject}
 	 */
-	public MapObject(WumpusMapObject wumpusMapObject) {
+	public MapObject(WumpusMap map, WumpusMapObject wumpusMapObject) {
+		this(null, map, wumpusMapObject);
+	}
+	
+	/**
+	 * Consturctor for editable MapObject
+	 * @param editor			{@link Editor} where MapObject is shown or {@code null} if object not editable
+	 * @param map				{@link WumpusMap} of {@link WumpusMapObject}
+	 * @param wumpusMapObject	{@link WumpusMapObject}
+	 */
+	public MapObject(Editor editor, WumpusMap map, WumpusMapObject wumpusMapObject) {
 		super();
 		
+		this.editor = editor;
+		this.map = map;
 		this.wumpusMapObject = wumpusMapObject;
 		
 		// set up widget design
@@ -40,7 +56,9 @@ public class MapObject extends JPanel implements MouseListener {
 		setLayout(new GridLayout(0, 1, 0, 0));
 		
 		// add listener
-		addMouseListener(this);
+		if( editor != null ){
+			addMouseListener(this);
+		}
 		
 		// update gui objects
 		updateWumpusGuiObjects();
@@ -57,6 +75,10 @@ public class MapObject extends JPanel implements MouseListener {
 			// clear gui objects
 			removeAll();
 			
+			// set WumpusObject in map
+			if( map != null ){
+				map.setWumpusMapObject(wumpusMapObject);
+			}
 			
 			for( WumpusObjects wObject : wumpusMapObject.getObjectsList() ){
 				if( wObject.imgRescource != null ){
@@ -76,11 +98,10 @@ public class MapObject extends JPanel implements MouseListener {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		WumpusObjects tool = Editor.getTool();
+		WumpusObjects tool = editor.getTool();
 		Object source = e.getSource();
 		
-		if( tool != null ){
-			
+		if( tool != null ){			
 			if( tool == WumpusObjects.DELETE ){
 				// try to convert source to label to delete it
 				try{
@@ -91,13 +112,11 @@ public class MapObject extends JPanel implements MouseListener {
 			}
 			else{
 				logger.debug("adding " + tool + " to " + wumpusMapObject.getRow() + "," + wumpusMapObject.getColumn());
-				wumpusMapObject.add(tool);
 				logger.debug(wumpusMapObject.contains(tool));
 			}
 			
 			// update gui panel
-			updateWumpusGuiObjects();
-			
+			updateWumpusGuiObjects();			
 		}
 	}
 

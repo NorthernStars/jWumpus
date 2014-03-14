@@ -9,6 +9,10 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
+
+import de.northernstars.jwumpus.core.WumpusMap;
+import de.northernstars.jwumpus.gui.widgets.MapObject;
+
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
@@ -17,11 +21,17 @@ import java.awt.GridLayout;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.JTextField;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.awt.Toolkit;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
+	private static final Logger logger = LogManager.getLogger(Editor.class);
+	
 	private JPanel contentPane;
 	private JTextField txtSetpDelay;
 
@@ -193,4 +203,34 @@ public class MainFrame extends JFrame {
 		JLabel lblCurrentStep = new JLabel("0");
 		panel.add(lblCurrentStep, "4, 4");
 	}
+	
+	/**
+	 * Updates a map panel
+	 * @param editor	{@link Editor} frame if map is editable, {@code null} otherwise
+	 * @param map		{@link WumpusMap} to show
+	 * @param panel		{@link JPanel} where to show {@code map}
+	 */
+	public static void updateGuiMap(Editor editor, WumpusMap map, JPanel panel){
+		if( map != null && panel != null ){
+			logger.debug("Updating map: " + map.getMapName() + ": " + map);
+			
+			// clear gui map
+			panel.removeAll();
+			
+			// set new grid
+			panel.setLayout(new GridLayout(map.getRows(), map.getColumns(), 0, 0));
+			
+			// add objects to map
+			for( int row=0; row<map.getRows(); row++ ){
+				for( int column=0; column<map.getColumns(); column++ ){
+					logger.debug("adding object at " + row + "," + column);
+					panel.add( new MapObject(editor, map, map.getWumpusMapObject(row, column)) );
+				}
+			}
+			
+			// redraw gui map panel
+			panel.validate();			
+		}
+	}
+	
 }

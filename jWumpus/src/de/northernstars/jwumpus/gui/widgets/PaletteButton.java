@@ -18,11 +18,19 @@ import de.northernstars.jwumpus.gui.Editor;
 @SuppressWarnings("serial")
 public class PaletteButton extends JButton implements ActionListener {
 
-	private WumpusObjects tool;
+	private Editor editor;
+	private WumpusObjects tool;	
 	
-	public PaletteButton(WumpusObjects tool) {
+	/**
+	 * Constrcutor
+	 * @param editor	{@link Editor} gui where palette button is added
+	 * @param tool		{@link WumpusObjects} for palette tool button
+	 */
+	public PaletteButton(Editor editor, WumpusObjects tool) {
 		super();
+		this.editor = editor;
 		this.tool = tool;
+		
 		setText(tool.name());
 		setIconTextGap(10);
 		setHorizontalAlignment(SwingConstants.LEFT);
@@ -31,12 +39,14 @@ public class PaletteButton extends JButton implements ActionListener {
 		}
 		
 		// add listener
-		addActionListener(this);
+		if( editor != null ){
+			addActionListener(this);
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Editor.setTool(tool);
+		editor.setTool(tool);
 	}
 	
 }
