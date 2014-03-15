@@ -31,10 +31,42 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>
-<a name="download-latest-binary-package" class="anchor" href="#download-latest-binary-package"><span class="octicon octicon-link"></span></a>Download latest binary package</h3>
+        <h1>
+<a name="download-latest-binary-package" class="anchor" href="#download-latest-binary-package"><span class="octicon octicon-link"></span></a>Download latest binary package</h1>
 
-<p><a href="https://github.com/NorthernStars/jWumpus/releases">Visit jWumpus release page</a>.</p>
+<p>You can find the latest release at <a href="https://github.com/NorthernStars/jWumpus/releases">https://github.com/NorthernStars/jWumpus/releases</a>.</p>
+
+<h2>
+<a name="project-description" class="anchor" href="#project-description"><span class="octicon octicon-link"></span></a>Project description</h2>
+
+<p>jWumpus is a java based library for easy programming own artrifical intelligences to solve the wumpus world problem.</p>
+
+<p>jWumpus includes a set of objects like a wumpus world map, objets on that map, action a agend can do and more to make programming an own AI easier. Also a graphical user interface and an editor are included to easily manage AI processing and wumpus world map creation.</p>
+
+<h3>
+<a name="wumpus-world-problem" class="anchor" href="#wumpus-world-problem"><span class="octicon octicon-link"></span></a>Wumpus world problem</h3>
+
+<p>Inside the wumpus world there is an agent that wants to find the gold of the monster called wumpus.
+The world consists of rectangular fields. The agend can move only one field up, down, left or right.</p>
+
+<p>At the fields around the wumpus the agent can smell a stench. At the fields around a trap the agend can fell a breeze. And (depending on the variant of the problem) at the fields around the gold a twinkle.
+The agend knows always on wich field he is but can not see anithing of the world on start.</p>
+
+<p><img src="https://f.cloud.github.com/assets/3993793/2423907/d7e2ccba-aba0-11e3-8c19-69e2d3736dcd.png" alt="600px-wumpus_welt svg"></p>
+
+<p>The agent also has a bow with one arrow. Using this bow he can try to shoot the wumpus by shooting into one direction (up, down, left, right).</p>
+
+<p>The agend has to move through the wumpus world and tries to find the gold and detect positions of traps and the wumpus.</p>
+
+<h3>
+<a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h3>
+
+<p><img src="https://f.cloud.github.com/assets/3993793/2423971/b5da81e8-aba1-11e3-8481-9492472c4382.png" alt="editor"></p>
+
+<h2>
+<a name="starting-with-jwumpus" class="anchor" href="#starting-with-jwumpus"><span class="octicon octicon-link"></span></a>Starting with jWumpus</h2>
+
+<p>If you includes jWumpus into your build path, create a new class for you AI and implement the <code>WumpusAI</code> interface from jWumpus. The interface includes a set of functions. Take a look at the examples to knwo more about them. Most important are the functions <code>public void putWumpusWorldMap(WumpusMap map)</code> wich is called by jWumpus main class to put a new wumpus world map into your AI and <code>public Movement getMovement()</code> wich calculates a <code>Movement</code> depending on the <code>WumpusMap</code> your AI gets from jWumpus main class.</p>
       </section>
     </div>
 
