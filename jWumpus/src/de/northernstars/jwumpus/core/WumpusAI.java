@@ -36,11 +36,6 @@ public interface WumpusAI {
 	public Movement getMovement();
 	
 	/**
-	 * @return {@link WumpusMap} of the AI or {@code null}
-	 */
-	public WumpusMap getMap();
-	
-	/**
 	 * Called by the jWumpus main class to put
 	 * the {@link PlayerState}
 	 * @param playerState {@link PlayerState}

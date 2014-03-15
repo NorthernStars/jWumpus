@@ -14,7 +14,7 @@ public class WumpusMap {
 	private int rows = 0;
 	private int columns = 0;
 	private List<WumpusMapObject> map = new ArrayList<WumpusMapObject>();
-	private boolean checkDimesion = true;
+	private boolean checkDimension = true;
 	
 	/**
 	 * Constructor
@@ -43,9 +43,12 @@ public class WumpusMap {
 	 */
 	public WumpusMap(WumpusMap map){
 		this(map.getRows(), map.getColumns(), map.getMapName());
+		
+		setCheckDimension( false );
 		for( WumpusMapObject mapObject : map.getMap() ){
 			setWumpusMapObject( new WumpusMapObject(mapObject) );
 		}
+		setCheckDimension( map.getCheckDimension() );
 	}
 	
 	/**
@@ -54,7 +57,7 @@ public class WumpusMap {
 	 * @return {@code true} if successfull, {@code false} otherwise
 	 */
 	public boolean setWumpusMapObject(WumpusMapObject object){		
-		if( !getCheckDimesion() || (object.getRow() < rows && object.getColumn() < columns) ){			
+		if( !getCheckDimension() || (object.getRow() < rows && object.getColumn() < columns) ){			
 			// delete existing objects
 			removeWumpusMapObject(object.getRow(), object.getColumn());
 			
@@ -107,16 +110,16 @@ public class WumpusMap {
 	 * @return {@link WumpusMapObject} at position [{@code row}, {@ode column}]
 	 */
 	public WumpusMapObject getWumpusMapObject(int row, int column){
-		if( row < rows && column < columns ){
+		if( !getCheckDimension() || (row < getRows() && column < getColumns()) ){
 			// search for object
-			for( WumpusMapObject object : map ){
+			for( WumpusMapObject object : getMap() ){
 				if( object.getRow() == row && object.getColumn() == column ){
 					return object;
 				}
 			}
 		}
 		
-		return new WumpusMapObject(row, column);
+		return null;
 	}
 	
 	/**
@@ -126,8 +129,8 @@ public class WumpusMap {
 	 */
 	public void removeWumpusMapObject(int row, int column){
 		WumpusMapObject object;
-		while( (object = getWumpusMapObject(row, column)).getObjectsList().size() > 0 ){
-			map.remove(object);
+		while( (object = getWumpusMapObject(row, column)) != null ){
+			getMap().remove(object);
 		}
 	}
 	
@@ -154,21 +157,67 @@ public class WumpusMap {
 	}
 	
 	/**
-	 * Deletes all objects on map that don't fit into dimension
+	 * Sets dimension of map depending of elements in {@link List} of {@link WumpusMapObject}
 	 */
-	private void updateMapObjects(){
-		List<WumpusMapObject> removeMap = new ArrayList<WumpusMapObject>();
+	public void updateDimensions(){
+		int rowMin = 0;
+		int rowMax = 0;
+		int columnMin = 0;
+		int columnMax = 0;
 		
-		// add all elements out of bounds to remove map
-		for( WumpusMapObject object : map ){
-			if( object.getRow() >= getRows() || object.getColumn() >= getColumns() ){
-				System.out.println("remove " + object.getObjectsList() + " at " + object.getRow() + "," + object.getColumn());
-				removeMap.add(object);
+		// get map dimension
+		for( WumpusMapObject mapObject : getMap() ){
+			if( mapObject.getRow() < rowMin ){
+				rowMin = mapObject.getRow();
+			}
+			else if( mapObject.getRow() > rowMax ){
+				rowMax = mapObject.getRow();
+			}
+			
+			if( mapObject.getColumn() < columnMin ){
+				columnMin = mapObject.getColumn();
+			}
+			else if( mapObject.getColumn() > columnMax ){
+				columnMax = mapObject.getColumn();
 			}
 		}
 		
-		// delete all elements in remove map from map
-		map.removeAll(removeMap);
+		// adjust map objects position to origin (0,0)
+		int offsetRow = Math.abs(rowMin);
+		int offsetColumn = Math.abs(columnMin);
+
+		for( WumpusMapObject mapObject : getMap() ){
+			mapObject.setRow( mapObject.getRow()+offsetRow );
+			mapObject.setColumn( mapObject.getColumn()+offsetColumn );
+		}
+		
+		// set map dimension
+		boolean vCheckDimension = getCheckDimension();
+		setCheckDimension(false);
+		
+		setRows( rowMax - rowMin + 1 );
+		setColumns( columnMax - columnMin + 1 );
+		
+		setCheckDimension(vCheckDimension);
+	}
+	
+	/**
+	 * Deletes all objects on map that don't fit into dimension
+	 */
+	private void updateMapObjects(){
+		if( getCheckDimension() ){
+			List<WumpusMapObject> removeMap = new ArrayList<WumpusMapObject>();
+			
+			// add all elements out of bounds to remove map
+			for( WumpusMapObject object : map ){
+				if( object.getRow() >= getRows() || object.getColumn() >= getColumns() ){
+					removeMap.add(object);
+				}
+			}
+			
+			// delete all elements in remove map from map
+			map.removeAll(removeMap);
+		}
 	}
 	
 	/**
@@ -209,17 +258,25 @@ public class WumpusMap {
 	}
 
 	/**
-	 * @return the checkDimesion
+	 * @return the checkDimension
 	 */
-	public boolean getCheckDimesion() {
-		return checkDimesion;
+	public boolean getCheckDimension() {
+		return checkDimension;
 	}
 
 	/**
-	 * @param checkDimesion the checkDimesion to set
+	 * @param checkDimension the checkDimension to set
 	 */
-	protected void setCheckDimesion(boolean checkDimesion) {
-		this.checkDimesion = checkDimesion;
+	public void setCheckDimension(boolean checkDimension) {
+		this.checkDimension = checkDimension;
+	}
+	
+	public String toString(){
+		String ret = getRows() + "," + getColumns() + ": " + getMapName();
+		for( WumpusMapObject mapObject : getMap() ){
+			ret += "\n\t" + mapObject;
+		}
+		return ret;
 	}
 	
 }

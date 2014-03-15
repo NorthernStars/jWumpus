@@ -12,18 +12,23 @@ public interface JWumpusControl {
 	public boolean startAI(long delay);
 	
 	/**
-	 * Callback to pause processing of AI steps
+	 * Callback to pause processing of AI steps.
 	 */
 	public void pauseAI();
 	
 	/**
-	 * Callback to update AIs step delay
-	 * @param delay {@link Long} time delay between AI steps.
+	 * Callback to resume paused AI.
 	 */
-	public void setAIStepDelay(long delay);
+	public void resumeAI();
 	
 	/**
-	 * Callback to reset AI
+	 * Callback to update AIs step delay.
+	 * @param delay {@link Long} time delay between AI steps.
+	 */
+	public void setAiStepDelay(long delay);
+	
+	/**
+	 * Callback to reset AI.
 	 */
 	public void resetAI();
 	
@@ -33,13 +38,13 @@ public interface JWumpusControl {
 	public void nextAIStep();
 	
 	/**
-	 * Callback if {@link WumpusMap} loaded
+	 * Callback if {@link WumpusMap} loaded.
 	 * @param map	{@link WumpusMap}
 	 */
 	public void mapLoaded(WumpusMap map);
 	
 	/**
-	 * Callback to close jWumpus main class
+	 * Callback to close jWumpus main class.
 	 */
 	public void close();
 	

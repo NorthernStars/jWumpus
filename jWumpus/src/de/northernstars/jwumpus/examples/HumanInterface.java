@@ -33,6 +33,7 @@ public class HumanInterface extends JFrame {
 	public JButton btnRight;
 	public JLabel lblNewLabel;
 	public JLabel lblPlayerState;
+	public JPanel panelMap;
 
 	/**
 	 * Launch the application.
@@ -64,7 +65,7 @@ public class HumanInterface extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
+				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,},
@@ -76,6 +77,8 @@ public class HumanInterface extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				RowSpec.decode("8dlu"),
+				RowSpec.decode("default:grow"),
+				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 		
@@ -117,6 +120,9 @@ public class HumanInterface extends JFrame {
 		
 		btnRight = new JButton("Right");
 		panel.add(btnRight);
+		
+		panelMap = new JPanel();
+		contentPane.add(panelMap, "2, 10, 3, 1, fill, fill");
 		
 		// call listener
 		if( listener != null ){

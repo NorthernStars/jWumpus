@@ -14,6 +14,7 @@ import com.jgoodies.forms.factories.FormFactory;
 
 import de.northernstars.jwumpus.core.PlayerState;
 import de.northernstars.jwumpus.core.WumpusMap;
+import de.northernstars.jwumpus.core.WumpusMapObject;
 import de.northernstars.jwumpus.gui.widgets.MapObject;
 
 import javax.swing.JLabel;
@@ -50,7 +51,7 @@ import java.io.FileReader;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
-	private static final Logger logger = LogManager.getLogger(Editor.class);
+	private static final Logger logger = LogManager.getLogger(MainFrame.class);
 	private static final String title = "jWumpus";
 	private JWumpusControl control;
 	
@@ -199,10 +200,17 @@ public class MainFrame extends JFrame {
 							btnNext.setEnabled(false);
 						}
 					}
+					else if( btnStart.getText().contains("Resume") ){
+						control.resumeAI();
+						btnStart.setText("Pause");
+						btnStart.setMnemonic('p');
+						btnReset.setEnabled(false);
+						btnNext.setEnabled(false);
+					}
 					else{
 						control.pauseAI();
-						btnStart.setText("Start");
-						btnStart.setMnemonic('s');
+						btnStart.setText("Resume");
+						btnStart.setMnemonic('r');
 						btnReset.setEnabled(true);
 						btnNext.setEnabled(true);
 					}
@@ -219,6 +227,7 @@ public class MainFrame extends JFrame {
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnStart.setText("Start");
+				btnStart.setMnemonic('s');
 				
 				if( control != null ){
 					control.resetAI();
@@ -324,7 +333,7 @@ public class MainFrame extends JFrame {
 		try{
 			return Long.parseLong(txtSetpDelay.getText());
 		}catch (NumberFormatException err){
-			logger.error("Step dela yis not a number");
+			logger.error("Step delay is not a number");
 		}
 		
 		return 0;
@@ -363,6 +372,7 @@ public class MainFrame extends JFrame {
 			// check if map can get loaded
 			if( mapFile != null && mapFile.exists() && mapFile.canRead() ){
 				setMap( (new Gson()).fromJson(new FileReader(mapFile), WumpusMap.class) );
+				logger.debug("Loaded map " + map.getMapName());
 				
 				// call JWumpusControl listener
 				if( control != null ){
@@ -403,8 +413,8 @@ public class MainFrame extends JFrame {
 	 * @param aiMap {@link WumpusMap}
 	 */
 	public void setAiMap(WumpusMap aiMap){
-		this.aiMap = aiMap;
-		updateAIMap();
+		this.aiMap = new WumpusMap(aiMap);
+		updateAiMap();
 	}
 	
 	/**
@@ -412,7 +422,7 @@ public class MainFrame extends JFrame {
 	 * @param map {@link WumpusMap}
 	 */
 	public void setMap(WumpusMap map){
-		this.map = map;
+		this.map = new WumpusMap(map);
 		updateOriginalGuiMap();
 	}
 	
@@ -427,7 +437,7 @@ public class MainFrame extends JFrame {
 	/**
 	 * Updates ai gui map
 	 */
-	private void updateAIMap(){
+	private void updateAiMap(){
 		updateGuiMap(aiMap, panelMapAI);
 	}
 	
@@ -447,11 +457,21 @@ public class MainFrame extends JFrame {
 	 * @param panel		{@link JPanel} where to show {@code map}
 	 */
 	public static void updateGuiMap(Editor editor, WumpusMap map, JPanel panel){
-		if( map != null && panel != null ){
-			logger.debug("Updating map: " + map.getMapName() + ": " + map);
-			
+		if( map != null && panel != null ){			
 			// clear gui map
 			panel.removeAll();
+			
+			// update maps dimension			
+			if( !map.getCheckDimension() ){
+				map.updateDimensions();
+			}
+			
+			// check map dimension
+			if( (map.getRows() == 0 && map.getColumns() == 0)
+					|| map.getRows() < 0 || map.getColumns() < 0){
+				logger.error("No valid map dimensions!");
+				return;
+			}
 			
 			// set new grid
 			panel.setLayout(new GridLayout(map.getRows(), map.getColumns(), 0, 0));
@@ -459,11 +479,16 @@ public class MainFrame extends JFrame {
 			// add objects to map
 			for( int row=map.getRows()-1; row>=0; row-- ){
 				for( int column=0; column<map.getColumns(); column++ ){
-					panel.add( new MapObject(editor, map, map.getWumpusMapObject(row, column)) );
+					WumpusMapObject mapObject = map.getWumpusMapObject(row, column);
+					if( mapObject == null ){
+						mapObject = new WumpusMapObject(row, column);
+					}
+					panel.add( new MapObject(editor, map, mapObject) );
 				}
 			}
 			
 			// redraw gui map panel
+			panel.repaint();
 			panel.validate();			
 		}
 	}

@@ -120,4 +120,12 @@ public class WumpusMapObject {
 		this.objectsList = objectsList;
 	}
 	
+	public String toString(){
+		String ret = getRow() + "," + getColumn();
+		for( WumpusObjects object : getObjectsList() ){
+			ret += " " + object;
+		}
+		return ret;
+	}
+	
 }

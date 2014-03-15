@@ -1,5 +1,6 @@
 package de.northernstars.jwumpus.core;
 
+import java.awt.EventQueue;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -60,7 +61,6 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	 * @return {@link WumpusMapObject} of first player on map or {@code null} if not player found
 	 */
 	public WumpusMapObject getFirstPlayerWumpusMapObject(){
-		logger.debug("map: " + getMap());
 		List<WumpusMapObject> players = getMap().getWumpusObjects(WumpusObjects.PLAYER);		
 		if( players.size() > 0 ){
 			return players.get(0);
@@ -84,21 +84,20 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	 * Updates gui, if gui is loaded
 	 */
 	public void updateGui(){
-		if( getGui() != null ){
-			
-			// show map and status
-			getGui().setMap( getMap() );
-			getGui().setStatus( getAiSteps(), getPlayerState() );
-			
-			
-			// show ai map
-			WumpusMap vAiMap = getAi().getMap();
-			if( vAiMap != null ){
-				getGui().setAiMap( vAiMap );
-			}
-			else{
-				getGui().setAiMap( getAiMap() );
-			}
+		if( getGui() != null ){			
+			EventQueue.invokeLater( new Runnable() {
+				
+				@Override
+				public void run() {
+					// show map and status
+					getGui().setMap( getMap() );
+					getGui().setStatus( getAiSteps(), getPlayerState() );
+					
+					// show ai map
+					getGui().setAiMap( getAiMap() );
+				}
+				
+			} );
 		}
 	}
 
@@ -112,7 +111,7 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 
 	@Override
 	public boolean startAI(long delay) {
-		if( getAi() != null ){
+		if( getAi() != null && getMap() != null ){
 			try{
 				
 				runnableAI = new RunnableAI(this, delay);
@@ -137,9 +136,16 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 			runnableAI.pause();
 		}
 	}
+	
+	@Override
+	public void resumeAI() {
+		if( runnableAI != null ){
+			runnableAI.resume();
+		}
+	}
 
 	@Override
-	public void setAIStepDelay(long delay) {
+	public void setAiStepDelay(long delay) {
 		if( runnableAI != null ){
 			runnableAI.setStepDelay(delay);
 		}
@@ -157,6 +163,7 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 			
 			setAiSteps(0);
 			setPlayerState(PlayerState.UNKNOWN);
+			setAiMap(null);
 			mapLoaded(vMap);
 			runnableAI = null;
 			
@@ -362,7 +369,7 @@ class RunnableAI implements Runnable{
 				WumpusMapObject player =  new WumpusMapObject( jWumpus.getFirstPlayerWumpusMapObject() );
 				player.setRow(0);
 				player.setColumn(0);
-				aiMap.setCheckDimesion(false);
+				aiMap.setCheckDimension(false);
 				aiMap.setWumpusMapObject( player );
 				jWumpus.setAiMap(aiMap);
 			}
@@ -381,9 +388,6 @@ class RunnableAI implements Runnable{
 			player = new WumpusMapObject(player);
 			aiPlayer = new WumpusMapObject(aiPlayer);
 			
-			logger.debug("Current players position on map: " + player.getRow() + "," + player.getColumn());
-			logger.debug("Current players position on AI map: " + aiPlayer.getRow() + "," + aiPlayer.getColumn());
-			
 			// put map into AI
 			jWumpus.getAi().putWumpusWorldMap( new WumpusMap(jWumpus.getAiMap()) );
 			
@@ -392,25 +396,44 @@ class RunnableAI implements Runnable{
 			
 			try{
 				
-				ProcesserActionAI process = new ProcesserActionAI(jWumpus);
-				(new Thread(process)).start();
-				
+				// get movement from AI
 				long timeoutTime = 0;
 				long tm = System.currentTimeMillis();
-				while( process.action == null
-						&& (timeoutTime = System.currentTimeMillis()-tm) < JWumpus.timeoutAI){
-					jWumpus.getAi().putRemainingTime(JWumpus.timeoutAI - timeoutTime);
+				
+				/* Wait for movement from AI until:
+				 * - Movement is not null
+				 * - timout
+				 * If pause set until waiting for Movement. Do noting.
+				 */				
+				while( ((action = jWumpus.getAi().getMovement()) == null
+						&& (timeoutTime = System.currentTimeMillis()-tm) < JWumpus.timeoutAI)
+						|| pause){
+					
+					if( !pause ){
+						jWumpus.getAi().putRemainingTime(timeoutTime);
+					}
+					else{
+						tm = System.currentTimeMillis() - timeoutTime;
+					}
+					
+					// Wait to reduce cpu load
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					
+				}
+				
+				// check action
+				if( action == null ){
+					action = Movement.NO_MOVEMENT;
 				}
 				
 				// check for timeout
 				if( timeoutTime >= JWumpus.timeoutAI ){
 					jWumpus.getAi().putLastMovementSuccess(MovementSuccess.TIMEOUT);
 					continue;
-				}
-				
-				// get action
-				if( process.action != null ){
-					action = process.action;
 				}
 				
 			}catch (IllegalThreadStateException e){
@@ -420,7 +443,6 @@ class RunnableAI implements Runnable{
 			// calculate players new position
 			int newPlayerPosition[] = {player.getRow(), player.getColumn()};
 			int newAiPlayerPosition[] = {aiPlayer.getRow(), aiPlayer.getColumn()};
-			logger.debug("positions: " + newPlayerPosition[0] + "," + newPlayerPosition[1]);
 			switch(action){
 			case UP:
 				newPlayerPosition[0] = newPlayerPosition[0] + 1;
@@ -446,15 +468,14 @@ class RunnableAI implements Runnable{
 				break;
 			}
 			
-			logger.debug("Moving player to " + newPlayerPosition[0] + "," + newPlayerPosition[1]);
-			
 			// check if player can move
 			if( newPlayerPosition[0] >= 0 && newPlayerPosition[0] < jWumpus.getMap().getRows()
 					&& newPlayerPosition[1] >= 0 && newPlayerPosition[1] < jWumpus.getMap().getRows() ){
 				
 				// get WumpusMapObject at new position and add player
-				WumpusMapObject mapObject = new WumpusMapObject( jWumpus.getMap()
-						.getWumpusMapObject(newPlayerPosition[0], newPlayerPosition[1]) );
+				WumpusMapObject vMapObject = jWumpus.getMap().getWumpusMapObject(newPlayerPosition[0], newPlayerPosition[1]);
+				WumpusMapObject mapObject = new WumpusMapObject(
+						(vMapObject == null ? new WumpusMapObject(newPlayerPosition[0] , newPlayerPosition[1]) : vMapObject)  );
 				
 				// remove player from old position on map
 				player.remove(WumpusObjects.PLAYER);
@@ -462,14 +483,12 @@ class RunnableAI implements Runnable{
 				
 				// add player to new position on map
 				mapObject.add(WumpusObjects.PLAYER);
-				logger.debug("set player position on map: " + mapObject.contains(WumpusObjects.PLAYER) + " "
-						+ jWumpus.getMap().setWumpusMapObject(mapObject));				
+				jWumpus.getMap().setWumpusMapObject(mapObject);		
 				
 				// create new WumpusMapObject on AI map
 				WumpusMapObject aiMapObject = new WumpusMapObject(mapObject);
 				aiMapObject.setRow( newAiPlayerPosition[0] );
 				aiMapObject.setColumn( newAiPlayerPosition[1] );
-				logger.debug("new ai player position: " + aiMapObject.getRow() + "," + aiMapObject.getColumn());
 				
 				// remove old AI player from old position on ai map
 				aiPlayer.remove(WumpusObjects.PLAYER);
@@ -500,7 +519,9 @@ class RunnableAI implements Runnable{
 			}
 			
 			// increase ai steps
-			jWumpus.setAiSteps( jWumpus.getAiSteps()+1 );
+			if( action != Movement.NO_MOVEMENT ){
+				jWumpus.setAiSteps( jWumpus.getAiSteps()+1 );
+			}
 			
 			// update jWumpus gui
 			jWumpus.updateGui();
@@ -523,24 +544,4 @@ class RunnableAI implements Runnable{
 		logger.debug("AI thread stopped");
 	}
 	
-}
-
-
-/**
- * Class to get action from ai
- * @author Hannes Eilers
- *
- */
-class ProcesserActionAI implements Runnable{
-	public Movement action = null;
-	private JWumpus jWumpus;
-	
-	public ProcesserActionAI(JWumpus jWumpus) {
-		this.jWumpus = jWumpus;
-	}
-	
-	@Override
-	public void run() {
-		action = jWumpus.getAi().getMovement(); 
-	}			
 }

@@ -40,8 +40,9 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 	private Logger logger = LogManager.getLogger(ExampleAI.class);
 	private HumanInterface gui;
 	
+	@SuppressWarnings("unused")
 	private WumpusMap mMap;
-	private Movement movement = Movement.NO_MOVEMENT;
+	private Movement movement = null;
 
 	/**
 	 * Consctrutor
@@ -77,18 +78,8 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 		 * returns it to jWUmpus main class.
 		 */
 		Movement vMovement = movement;
-		movement = Movement.NO_MOVEMENT;
+		movement = null;
 		return vMovement;
-	}
-
-	@Override
-	public WumpusMap getMap() {
-		/*
-		 * Returns the current map.
-		 * Could also return any other WumpusMap object or null to use jWumpus main class
-		 * default behaviour.
-		 */
-		return mMap;
 	}
 
 	@Override
@@ -123,7 +114,7 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 		// update remaining time on gui progressbar
 		if( gui != null ){
 			gui.pgbRemainingTime.setMaximum( (int) JWumpus.timeoutAI );
-			gui.pgbRemainingTime.setValue( (int) time );
+			gui.pgbRemainingTime.setValue( (int) (JWumpus.timeoutAI - time) );
 		}
 	}
 
