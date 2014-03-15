@@ -14,6 +14,7 @@ public class WumpusMap {
 	private int rows = 0;
 	private int columns = 0;
 	private List<WumpusMapObject> map = new ArrayList<WumpusMapObject>();
+	private boolean checkDimesion = true;
 	
 	/**
 	 * Constructor
@@ -37,24 +38,66 @@ public class WumpusMap {
 	}
 	
 	/**
+	 * Constructor to clone another {@link WumpusMap}
+	 * @param map
+	 */
+	public WumpusMap(WumpusMap map){
+		this(map.getRows(), map.getColumns(), map.getMapName());
+		for( WumpusMapObject mapObject : map.getMap() ){
+			setWumpusMapObject( new WumpusMapObject(mapObject) );
+		}
+	}
+	
+	/**
 	 * Sets a {@link WumpusMapObject} on the map
 	 * @param object	{@link WumpusMapObject}
 	 * @return {@code true} if successfull, {@code false} otherwise
 	 */
-	public boolean setWumpusMapObject(WumpusMapObject object){
-		if( object.getRow() < rows && object.getColumn() < columns ){			
+	public boolean setWumpusMapObject(WumpusMapObject object){		
+		if( !getCheckDimesion() || (object.getRow() < rows && object.getColumn() < columns) ){			
 			// delete existing objects
 			removeWumpusMapObject(object.getRow(), object.getColumn());
 			
 			// add new object
 			if( object.getObjectsList().size() > 0 ){
-				map.add(object);				
+				getMap().add(object);				
 			}
 			
 			return true;
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Sets a {@link List} of {@link WumpusMapObject} on the map
+	 * @param objects	{@link List} of {@link WumpusMapObject}
+	 * @return 			{@link List} of {@link Boolean} with {@code true} for every
+	 * 					successfull set {@link WumpusMapObject} of {@code objects}, {@code false} otherwise
+	 */
+	public List<Boolean> setWumpusMapObjects(List<WumpusMapObject> objects){
+		List<Boolean> retStates = new ArrayList<Boolean>();		
+		for( WumpusMapObject o : objects ){
+			retStates.add( setWumpusMapObject(o) );
+		}		
+		return retStates;
+	}
+	
+	/**
+	 * Gets {@link List} of {@link WumpusMapObject} that contain a speicif WumpusObjects
+	 * @param object	{@link WumpusObjects} object to search for
+	 * @return			{@link List} of found {@link WumpusMapObject} containing {@code object}
+	 */
+	public List<WumpusMapObject> getWumpusObjects(WumpusObjects object){
+		List<WumpusMapObject> foundObjects = new ArrayList<WumpusMapObject>();
+		
+		for( WumpusMapObject mapObject : getMap() ){
+			if( mapObject.contains(object) ){
+				foundObjects.add(mapObject);
+			}
+		}
+		
+		return foundObjects;
 	}
 	
 	/**
@@ -163,6 +206,20 @@ public class WumpusMap {
 	 */
 	public void setMap(List<WumpusMapObject> map) {
 		this.map = map;
+	}
+
+	/**
+	 * @return the checkDimesion
+	 */
+	public boolean getCheckDimesion() {
+		return checkDimesion;
+	}
+
+	/**
+	 * @param checkDimesion the checkDimesion to set
+	 */
+	protected void setCheckDimesion(boolean checkDimesion) {
+		this.checkDimesion = checkDimesion;
 	}
 	
 }

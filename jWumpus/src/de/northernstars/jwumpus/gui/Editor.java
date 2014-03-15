@@ -80,11 +80,13 @@ public class Editor extends JFrame {
 	/**
 	 * Launches the editor.
 	 */
-	public static void showEditor() {
+	public static void showEditor(WumpusMap wumpusMap) {
+		final WumpusMap mWumpusMap = wumpusMap;
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Editor frame = new Editor();
+					Editor frame = new Editor(mWumpusMap);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -94,9 +96,12 @@ public class Editor extends JFrame {
 	}
 	
 	public Editor(WumpusMap wumpusMap){
-		super();
-		map = wumpusMap;
-		updateGuiMap();
+		this();
+		
+		if( wumpusMap != null ){
+			map = wumpusMap;
+			updateGuiMap();
+		}
 	}
 	
 	/**
@@ -105,7 +110,6 @@ public class Editor extends JFrame {
 	public Editor() {
 		setTitle(title);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Editor.class.getResource("/de/northernstars/jwumpus/gui/img/map.png")));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 650);
 		
 		menuBar = new JMenuBar();
@@ -155,7 +159,7 @@ public class Editor extends JFrame {
 		mntmClose.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
 		mntmClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				setVisible(false);
 			}
 		});
 		mnFile.add(mntmClose);

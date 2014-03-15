@@ -33,7 +33,17 @@ public class WumpusMapObject {
 	 */
 	public WumpusMapObject(int row, int column, List<WumpusObjects> objectsList){
 		this(row, column);
-		this.objectsList = objectsList;
+		for( WumpusObjects o : objectsList ){
+			this.objectsList.add(o);
+		}
+	}
+	
+	/**
+	 * Consctrutor to clone another {@link WumpusMapObject}
+	 * @param object {@link WumpusMapObject} to clone
+	 */
+	public WumpusMapObject(WumpusMapObject object){
+		this(object.getRow(), object.getColumn(), object.getObjectsList());
 	}
 	
 	/**

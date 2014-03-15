@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
@@ -62,11 +63,6 @@ public class MapObject extends JPanel implements MouseListener {
 		
 		// update gui objects
 		updateWumpusGuiObjects();
-		
-		// show logger message
-		if( wumpusMapObject.getObjectsList().size() > 0 ){
-			logger.debug("adding object at " + wumpusMapObject.getRow() + "," + wumpusMapObject.getColumn());
-		}
 	}
 	
 	/**
@@ -85,9 +81,13 @@ public class MapObject extends JPanel implements MouseListener {
 				map.setWumpusMapObject(wumpusMapObject);
 			}
 			
+			JLabel nlabel = new JLabel(wumpusMapObject.getRow() + "," + wumpusMapObject.getColumn());
+			add(nlabel);
+			
 			for( WumpusObjects wObject : wumpusMapObject.getObjectsList() ){
 				if( wObject.imgRescource != null ){
 					WumpusObjectsLabel label = new WumpusObjectsLabel(wObject);
+					label.setToolTipText(wObject.name());
 					label.addMouseListener(this);
 					add(label);
 				}			
