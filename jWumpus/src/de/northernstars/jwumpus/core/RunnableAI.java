@@ -96,22 +96,22 @@ class RunnableAI implements Runnable{
 	
 	/**
 	 * Gets action from AI
-	 * @return {@link Movement} from AI
+	 * @return {@link Action} from AI
 	 */
-	private Movement getAction(){
-		Movement action = Movement.NO_MOVEMENT;
+	private Action getAction(){
+		Action action = Action.NO_ACTION;
 		
 		try{
 			
-			// get movement from AI
+			// get action from AI
 			GetActionFromAiRunnable process = new GetActionFromAiRunnable(jWumpus);
 			long timeoutTime = 0;
 			long tm = System.currentTimeMillis();
 			
-			/* Wait for movement from AI until:
-			 * - Movement is not null
+			/* Wait for action from AI until:
+			 * - Action is not null
 			 * - timout
-			 * If pause set until waiting for Movement. Do noting.
+			 * If pause set until waiting for Action. Do noting.
 			 */				
 			while( (process.action == null
 					&& (timeoutTime = System.currentTimeMillis()-tm) < JWumpus.timeoutAI)
@@ -136,12 +136,12 @@ class RunnableAI implements Runnable{
 			
 			// check action
 			if( action == null ){
-				action = Movement.NO_MOVEMENT;
+				action = Action.NO_ACTION;
 			}
 			
 			// check for timeout
 			if( timeoutTime >= JWumpus.timeoutAI ){
-				jWumpus.getAi().putLastMovementSuccess(MovementSuccess.TIMEOUT);
+				jWumpus.getAi().putLastActionSuccess(ActionSuccess.TIMEOUT);
 				return null;
 			}
 			
@@ -157,29 +157,29 @@ class RunnableAI implements Runnable{
 	 * depending on action
 	 * @param player	{@link WumpusMapObject} of player on map
 	 * @param aiPlayer	{@link WumpusMap} of player on AI map
-	 * @param action	{@link Movement}
+	 * @param action	{@link Action}
 	 * @return	{@link List} (1st: player position, 2nd ai player position) of {@link Integer} arrays
 	 */
-	private List<int[]> calculateNextPlayersPositions(WumpusMapObject player, WumpusMapObject aiPlayer, Movement action){
+	private List<int[]> calculateNextPlayersPositions(WumpusMapObject player, WumpusMapObject aiPlayer, Action action){
 		int playerPosition[] = {player.getRow(), player.getColumn()};
 		int aiPlayerPosition[] = {aiPlayer.getRow(), aiPlayer.getColumn()};
 		switch(action){
-		case UP:
+		case MOVE_UP:
 			playerPosition[0] = playerPosition[0] + 1;
 			aiPlayerPosition[0] = aiPlayerPosition[0] + 1;
 			break;
 			
-		case DOWN:
+		case MOVE_DOWN:
 			playerPosition[0] = playerPosition[0] - 1;
 			aiPlayerPosition[0] = aiPlayerPosition[0] - 1;
 			break;
 			
-		case LEFT:
+		case MOVE_LEFT:
 			playerPosition[1] = playerPosition[1] - 1;
 			aiPlayerPosition[1] = aiPlayerPosition[1] - 1;
 			break;
 			
-		case RIGHT:
+		case MOVE_RIGHT:
 			playerPosition[1] = playerPosition[1] + 1;
 			aiPlayerPosition[1] = aiPlayerPosition[1] + 1;
 			break;
@@ -200,7 +200,7 @@ class RunnableAI implements Runnable{
 	 * @param aiPlayer		{@link WumpusMapObject} of player on AI map
 	 * @param positions		{@link List} of {@link Integer} arrays with new positions.<br><br>
 	 * 
-	 * @see	{@link RunnableAI#calculateNextPlayersPositions(WumpusMapObject, WumpusMapObject, Movement) calculateNewPlayersPositions}
+	 * @see	{@link RunnableAI#calculateNextPlayersPositions(WumpusMapObject, WumpusMapObject, Action) calculateNewPlayersPositions}
 	 */
 	private void movePlayers(WumpusMapObject player, WumpusMapObject aiPlayer, List<int[]> positions){
 		int[] playerPosition = positions.get(0);
@@ -278,8 +278,8 @@ class RunnableAI implements Runnable{
 			// put map into AI
 			jWumpus.getAi().putWumpusWorldMap( new WumpusMap(jWumpus.getAiMap()) );
 			
-			// get movement
-			Movement action = getAction();
+			// get action
+			Action action = getAction();
 			
 			// check if action is null
 			if( action != null ){
@@ -295,18 +295,18 @@ class RunnableAI implements Runnable{
 					movePlayers(player, aiPlayer, positions);
 					
 					// set success
-					jWumpus.getAi().putLastMovementSuccess(MovementSuccess.SUCCESSFULL);
+					jWumpus.getAi().putLastActionSuccess(ActionSuccess.SUCCESSFULL);
 				}
 				else{
-					// movement failed do nothing
+					// action failed do nothing
 					logger.debug("Player can not move out of bounds!");
-					jWumpus.getAi().putLastMovementSuccess(MovementSuccess.FAILED);
+					jWumpus.getAi().putLastActionSuccess(ActionSuccess.FAILED);
 				}
 				
 			}
 				
 			// increase ai steps
-			if( action != Movement.NO_MOVEMENT ){
+			if( action != Action.NO_ACTION ){
 				jWumpus.setAiSteps( jWumpus.getAiSteps()+1 );
 			}
 			
@@ -334,13 +334,13 @@ class RunnableAI implements Runnable{
 }
 
 /**
- * Class for getting {@link Movement} from AI
+ * Class for getting {@link Action} from AI
  * @author Hannes Eilers
  *
  */
 class GetActionFromAiRunnable implements Runnable{
 
-	protected Movement action = null;
+	protected Action action = null;
 	protected boolean active = true;
 	private JWumpus jWumpus;
 	
@@ -350,7 +350,7 @@ class GetActionFromAiRunnable implements Runnable{
 	
 	@Override
 	public void run() {
-		while( active && (action=jWumpus.getAi().getMovement()) == null );
+		while( active && (action=jWumpus.getAi().getAction()) == null );
 	}
 	
 }

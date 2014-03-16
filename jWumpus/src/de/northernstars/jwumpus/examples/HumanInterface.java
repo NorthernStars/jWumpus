@@ -22,7 +22,7 @@ import java.awt.GridLayout;
 public class HumanInterface extends JFrame {
 	
 	private JPanel contentPane;
-	public JLabel lblLastMovementSuccess;
+	public JLabel lblLastActionSuccess;
 	public JLabel lblNewLabel_1;
 	public JPanel panel;
 	public JProgressBar pgbRemainingTime;
@@ -82,12 +82,12 @@ public class HumanInterface extends JFrame {
 				RowSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 		
-		lblNewLabel_1 = new JLabel("Last movement success:");
+		lblNewLabel_1 = new JLabel("Last action success:");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		contentPane.add(lblNewLabel_1, "2, 2");
 		
-		lblLastMovementSuccess = new JLabel("");
-		contentPane.add(lblLastMovementSuccess, "4, 2");
+		lblLastActionSuccess = new JLabel("");
+		contentPane.add(lblLastActionSuccess, "4, 2");
 		
 		lblNewLabel = new JLabel("Player state:");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -105,7 +105,7 @@ public class HumanInterface extends JFrame {
 		contentPane.add(pgbRemainingTime, "4, 6");
 		
 		panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Next movement", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBorder(new TitledBorder(null, "Next action", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPane.add(panel, "2, 8, 3, 1, fill, fill");
 		panel.setLayout(new GridLayout(1, 1, 0, 0));
 		

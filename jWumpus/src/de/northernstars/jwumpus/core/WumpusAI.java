@@ -17,23 +17,23 @@ public interface WumpusAI {
 	
 	/**
 	 * Called by the jWumpus main class to put
-	 * {@link MovementSuccess} of last {@link Movement} to AI.
-	 * @param movementSuccess
+	 * {@link ActionSuccess} of last {@link Action} to AI.
+	 * @param actionSuccess
 	 */
-	public void putLastMovementSuccess(MovementSuccess movementSuccess);
+	public void putLastActionSuccess(ActionSuccess actionSuccess);
 	
 	/**
 	 * Called by the jWumpus main class to put the remaining time
-	 * for a {@link Movement} response to AI.
+	 * for a {@link Action} response to AI.
 	 * @param time
 	 */
 	public void putRemainingTime(long time);
 	
 	/**
-	 * Generates {@link Movement} of player.
-	 * @return {@link Movement}
+	 * Generates {@link Action} of player.
+	 * @return {@link Action}
 	 */
-	public Movement getMovement();
+	public Action getAction();
 	
 	/**
 	 * Called by the jWumpus main class to put

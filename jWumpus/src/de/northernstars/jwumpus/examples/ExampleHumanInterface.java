@@ -9,9 +9,9 @@ import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.northernstars.jwumpus.core.MovementSuccess;
+import de.northernstars.jwumpus.core.ActionSuccess;
 import de.northernstars.jwumpus.core.JWumpus;
-import de.northernstars.jwumpus.core.Movement;
+import de.northernstars.jwumpus.core.Action;
 import de.northernstars.jwumpus.core.PlayerState;
 import de.northernstars.jwumpus.core.WumpusAI;
 import de.northernstars.jwumpus.core.WumpusMap;
@@ -31,7 +31,7 @@ public class ExampleHumanInterface {
 
 /**
  * ExampleHumanInterface AI
- * Uses gui to grap next {@link Movement} from user.
+ * Uses gui to grap next {@link Action} from user.
  * @author Hannes Eilers
  *
  */
@@ -42,7 +42,7 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 	
 	@SuppressWarnings("unused")
 	private WumpusMap mMap;
-	private Movement movement = null;
+	private Action action = null;
 
 	/**
 	 * Consctrutor
@@ -64,22 +64,22 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 	}
 
 	@Override
-	public void putLastMovementSuccess(MovementSuccess movementSuccess) {
+	public void putLastActionSuccess(ActionSuccess actionSuccess) {
 		if( gui != null ){
-			gui.lblLastMovementSuccess.setText( movementSuccess.name() );
+			gui.lblLastActionSuccess.setText( actionSuccess.name() );
 		}
 	}
 
 	@Override
-	public Movement getMovement() {
+	public Action getAction() {
 		/*
 		 * Contains the AI algorithm.
-		 * Here it's only grabbing last movement set on gui and
+		 * Here it's only grabbing last action set on gui and
 		 * returns it to jWumpus main class.
 		 */
-		Movement vMovement = movement;
-		movement = null;
-		return vMovement;
+		Action vAction = action;
+		action = null;
+		return vAction;
 	}
 
 	@Override
@@ -123,18 +123,18 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 		Object source = e.getSource();
 		
 		if( source == gui.btnDown ){
-			movement = Movement.DOWN;
+			action = Action.MOVE_DOWN;
 		}
 		else if( source == gui.btnLeft ){
-			movement = Movement.LEFT;
+			action = Action.MOVE_LEFT;
 		}
 		else if( source == gui.btnRight ){
-			movement = Movement.RIGHT;
+			action = Action.MOVE_RIGHT;
 		}
 		else if( source == gui.btnUp ){
-			movement = Movement.UP;
+			action = Action.MOVE_UP;
 		}
-		logger.debug("Set movement to " + movement);
+		logger.debug("Set action to " + action);
 	}
 	
 }
