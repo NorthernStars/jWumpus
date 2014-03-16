@@ -40,7 +40,6 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 	private Logger logger = LogManager.getLogger(ExampleAI.class);
 	private HumanInterface gui;
 	
-	@SuppressWarnings("unused")
 	private WumpusMap mMap;
 	@SuppressWarnings("unused")
 	private int arrows = 0;
@@ -63,6 +62,10 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 	public void putWumpusWorldMap(WumpusMap map) {
 		// Save the current map in local attribute
 		mMap = map;
+		
+		if( gui != null ){
+			gui.setTitle(HumanInterface.title + " - " + mMap.getMapName());
+		}
 	}
 
 	@Override

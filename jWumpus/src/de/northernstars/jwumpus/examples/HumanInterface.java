@@ -32,6 +32,8 @@ import java.awt.event.ActionEvent;
 @SuppressWarnings("serial")
 public class HumanInterface extends JFrame {
 	
+	public static String title = "Human Interface";
+	
 	private JPanel contentPane;
 	public JPanel panelMap;
 	public JProgressBar pgbRemainingTime;
@@ -76,7 +78,7 @@ public class HumanInterface extends JFrame {
 	 * Create the frame.
 	 */
 	public HumanInterface(FrameLoadedListener listener) {
-		setTitle("Human Interface");
+		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(50, 50, 500, 300);
 		

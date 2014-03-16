@@ -335,6 +335,7 @@ public class Editor extends JFrame {
 		int mapDimension[] = getMapDimensionFromGui();
 		String mapName = txtMapName.getText();
 		map = new WumpusMap(mapDimension[0], mapDimension[1], mapName);
+		mapFile = null;
 		
 		logger.debug("Created new map with " + mapDimension[0] +" rows and " + mapDimension[1] + " columns.");
 		

@@ -97,6 +97,7 @@ class ExampleAiNoGui implements WumpusAI, FrameLoadedListener, ActionListener{
 		if( gui != null ){
 			// using MainFrame static function to update a JPanel with current map
 			MainFrame.updateGuiMap(mMap, gui.panelMap);
+			gui.setTitle(HumanInterface.title + " - " + mMap.getMapName());
 		}
 	}
 

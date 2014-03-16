@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
@@ -81,8 +80,9 @@ public class MapObject extends JPanel implements MouseListener {
 				map.setWumpusMapObject(wumpusMapObject);
 			}
 			
-			JLabel nlabel = new JLabel(wumpusMapObject.getRow() + "," + wumpusMapObject.getColumn());
-			add(nlabel);
+			// Adding label with grid position
+//			JLabel nlabel = new JLabel(wumpusMapObject.getRow() + "," + wumpusMapObject.getColumn());
+//			add(nlabel);
 			
 			for( WumpusObjects wObject : wumpusMapObject.getObjectsList() ){
 				if( wObject.imgRescource != null ){
