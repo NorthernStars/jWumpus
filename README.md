@@ -2,6 +2,7 @@ jWumpus
 =======
 
 Java based wumpus game for artifical intelligences
+Visit http://northernstars.github.io/jWumpus for more information.
 
 ICONS
 =====
