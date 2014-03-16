@@ -63,21 +63,22 @@ public enum Action {
 	/**
 	 * @return the movements
 	 */
-	protected List<Action> getMovements() {
+	public List<Action> getMovements() {
 		return movements;
 	}
 
 	/**
 	 * @return the shoots
 	 */
-	protected List<Action> getShoots() {
+	public List<Action> getShoots() {
 		return shoots;
 	}
 
 	/**
 	 * @return the uncategorised
 	 */
-	protected List<Action> getUncategorised() {
+	public List<Action> getUncategorised() {
 		return uncategorised;
 	}
+	
 }
