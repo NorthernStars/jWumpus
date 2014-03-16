@@ -75,7 +75,7 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 		/*
 		 * Contains the AI algorithm.
 		 * Here it's only grabbing last movement set on gui and
-		 * returns it to jWUmpus main class.
+		 * returns it to jWumpus main class.
 		 */
 		Movement vMovement = movement;
 		movement = null;

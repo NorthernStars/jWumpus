@@ -9,7 +9,7 @@ package de.northernstars.jwumpus.core;
 public interface WumpusAI {
 
 	/**
-	 * Called by the jWUmpus main class to put
+	 * Called by the jWumpus main class to put
 	 * current {@link WumpusMap} to AI.
 	 * @param map {@link WumpusMap}
 	 */
