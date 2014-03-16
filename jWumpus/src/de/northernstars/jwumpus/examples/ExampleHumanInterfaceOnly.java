@@ -1,55 +1,63 @@
 package de.northernstars.jwumpus.examples;
 
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+
 import javax.swing.JFrame;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.northernstars.jwumpus.core.Action;
 import de.northernstars.jwumpus.core.ActionSuccess;
 import de.northernstars.jwumpus.core.JWumpus;
-import de.northernstars.jwumpus.core.Action;
 import de.northernstars.jwumpus.core.PlayerState;
 import de.northernstars.jwumpus.core.WumpusAI;
 import de.northernstars.jwumpus.core.WumpusMap;
+import de.northernstars.jwumpus.gui.MainFrame;
 import de.northernstars.jwumpus.gui.listener.FrameLoadedListener;
+import de.northernstars.jwumpus.gui.listener.JWumpusControl;
 
-public class ExampleHumanInterface {
-
+public class ExampleHumanInterfaceOnly {
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// Create new instance of JWumpus and pass instance of AI as parameter 
-		new JWumpus( new ExampleAI() );
+		// Create new instance of JWumpus and pass instance of AI as parameter.
+		// This does not show the genral gui.
+		ExampleAiNoGui.jWumpus = new JWumpus( new ExampleAiNoGui(), false );
 	}
 
 }
 
 /**
  * ExampleHumanInterface AI
- * Uses gui to grap next {@link Action} from user.
+ * Don't uses general gui and processes every step itself.
  * @author Hannes Eilers
  *
  */
-class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
+class ExampleAiNoGui implements WumpusAI, FrameLoadedListener, ActionListener{
+	
+	/**
+	 * {@link JWumpus} object interfacing {@link JWumpusControl} to control AI processing
+	 */
+	protected static JWumpusControl jWumpus;
 	
 	private Logger logger = LogManager.getLogger(ExampleAI.class);
 	private HumanInterface gui;
 	
-	@SuppressWarnings("unused")
 	private WumpusMap mMap;
 	@SuppressWarnings("unused")
 	private int arrows = 0;
-	private Action action = null;
+	private Action action = Action.NO_ACTION;
 
 	/**
 	 * Consctrutor
 	 */
-	public ExampleAI() {
+	public ExampleAiNoGui() {
 		/* Set new timeout for AI answer.
 		 * Otherwise human can not decide fast enough
 		 */
@@ -59,10 +67,37 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 		HumanInterface.showHumanINterface(this);
 	}
 	
+	/**
+	 * Loads a new map from file
+	 */
+	private void loadMap(){
+		// load Map
+		File mapFile = MainFrame.openFile();
+		WumpusMap vMap = JWumpus.loadMap(mapFile);
+		
+		// set map
+		if( vMap != null ){			
+			// call JWumpusControl listener
+			if( jWumpus != null ){
+				jWumpus.mapLoaded(vMap);
+				jWumpus.startAI(0);
+			}
+			else{
+				logger.error("No JWumpusControl listener set!");
+			}
+		}
+	}
+	
 	@Override
 	public void putWumpusWorldMap(WumpusMap map) {
 		// Save the current map in local attribute
 		mMap = map;
+		
+		// update map on gui
+		if( gui != null ){
+			// using MainFrame static function to update a JPanel with current map
+			MainFrame.updateGuiMap(mMap, gui.panelMap);
+		}
 	}
 
 	@Override
@@ -131,6 +166,9 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 			// gui loaded
 			gui = (HumanInterface) frame;
 			
+			// resize gui
+			gui.setBounds(50, 50, 600, 800);
+			
 			// add button listener
 			gui.btnMoveDown.addActionListener(this);
 			gui.btnMoveLeft.addActionListener(this);
@@ -140,6 +178,13 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 			gui.btnShootLeft.addActionListener(this);
 			gui.btnShootRight.addActionListener(this);
 			gui.btnShootUp.addActionListener(this);
+			
+			// show menu bar
+			gui.menuBar.setVisible(true);
+			
+			// add menu listener
+			gui.mntmLoadMap.addActionListener(this);
+			gui.mntmReset.addActionListener(this);
 		}
 	}
 
@@ -166,6 +211,7 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 		
+		// check buttons
 		if( action == null ){		
 			if( source == gui.btnMoveDown ){
 				action = Action.MOVE_DOWN;
@@ -194,7 +240,19 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 			
 			if( action != null ){
 				logger.debug("Set action to " + action);
+				
+				// process next step
+				jWumpus.nextAIStep();
 			}
+		}
+		
+		// check menu items
+		if( source == gui.mntmLoadMap ){
+			loadMap();
+		}
+		else if( source == gui.mntmReset ){
+			jWumpus.resetAI();
+			jWumpus.startAI(0);
 		}
 	}
 	
