@@ -98,7 +98,7 @@ public class MainFrame extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/de/northernstars/jwumpus/gui/img/wumpus.png")));
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 300, 800, 600);
+		setBounds(100, 100, 800, 600);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

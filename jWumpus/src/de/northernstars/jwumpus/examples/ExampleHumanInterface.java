@@ -3,7 +3,6 @@ package de.northernstars.jwumpus.examples;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JFrame;
 
 import org.apache.logging.log4j.LogManager;
@@ -102,10 +101,14 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 			gui = (HumanInterface) frame;
 			
 			// add button listener
-			gui.btnDown.addActionListener(this);
-			gui.btnLeft.addActionListener(this);
-			gui.btnRight.addActionListener(this);
-			gui.btnUp.addActionListener(this);
+			gui.btnMoveDown.addActionListener(this);
+			gui.btnMoveLeft.addActionListener(this);
+			gui.btnMoveRight.addActionListener(this);
+			gui.btnMoveUp.addActionListener(this);
+			gui.btnShootDown.addActionListener(this);
+			gui.btnShootLeft.addActionListener(this);
+			gui.btnShootRight.addActionListener(this);
+			gui.btnShootUp.addActionListener(this);
 		}
 	}
 
@@ -122,19 +125,36 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 		
-		if( source == gui.btnDown ){
-			action = Action.MOVE_DOWN;
+		if( action == null ){		
+			if( source == gui.btnMoveDown ){
+				action = Action.MOVE_DOWN;
+			}
+			else if( source == gui.btnMoveLeft ){
+				action = Action.MOVE_LEFT;
+			}
+			else if( source == gui.btnMoveRight ){
+				action = Action.MOVE_RIGHT;
+			}
+			else if( source == gui.btnMoveUp ){
+				action = Action.MOVE_UP;
+			}
+			else if( source == gui.btnShootDown ){
+				action = Action.SHOOT_DOWN;
+			}
+			else if( source == gui.btnShootLeft ){
+				action = Action.SHOOT_LEFT;
+			}
+			else if( source == gui.btnShootRight ){
+				action = Action.SHOOT_RIGHT;
+			}
+			else if( source == gui.btnShootUp ){
+				action = Action.SHOOT_UP;
+			}
+			
+			if( action != null ){
+				logger.debug("Set action to " + action);
+			}
 		}
-		else if( source == gui.btnLeft ){
-			action = Action.MOVE_LEFT;
-		}
-		else if( source == gui.btnRight ){
-			action = Action.MOVE_RIGHT;
-		}
-		else if( source == gui.btnUp ){
-			action = Action.MOVE_UP;
-		}
-		logger.debug("Set action to " + action);
 	}
 	
 }

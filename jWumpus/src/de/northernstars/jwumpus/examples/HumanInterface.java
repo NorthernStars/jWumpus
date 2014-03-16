@@ -18,6 +18,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JProgressBar;
 import javax.swing.JButton;
 import java.awt.GridLayout;
+import javax.swing.ImageIcon;
 
 @SuppressWarnings("serial")
 public class HumanInterface extends JFrame {
@@ -28,13 +29,17 @@ public class HumanInterface extends JFrame {
 	public JPanel panel;
 	public JProgressBar pgbRemainingTime;
 	public JLabel lblRemainingTime;
-	public JButton btnUp;
-	public JButton btnDown;
-	public JButton btnLeft;
-	public JButton btnRight;
+	public JButton btnMoveUp;
+	public JButton btnMoveDown;
+	public JButton btnMoveLeft;
+	public JButton btnMoveRight;
 	public JLabel lblNewLabel;
 	public JLabel lblPlayerState;
 	public JPanel panelMap;
+	public JButton btnShootUp;
+	public JButton btnShootDown;
+	public JButton btnShootLeft;
+	public JButton btnShootRight;
 
 	/**
 	 * Launch the application.
@@ -60,7 +65,7 @@ public class HumanInterface extends JFrame {
 	public HumanInterface(FrameLoadedListener listener) {
 		setTitle("Human Interface");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 465, 190);
+		setBounds(50, 50, 500, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -78,7 +83,7 @@ public class HumanInterface extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				RowSpec.decode("8dlu"),
-				RowSpec.decode("default:grow"),
+				RowSpec.decode("85dlu"),
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_ROWSPEC,}));
@@ -108,19 +113,35 @@ public class HumanInterface extends JFrame {
 		panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Next action", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPane.add(panel, "2, 8, 3, 1, fill, fill");
-		panel.setLayout(new GridLayout(1, 1, 0, 0));
+		panel.setLayout(new GridLayout(0, 4, 0, 5));
 		
-		btnUp = new JButton("Up");
-		panel.add(btnUp);
+		btnMoveLeft = new JButton("Move left");
+		btnMoveLeft.setIcon(new ImageIcon(HumanInterface.class.getResource("/de/northernstars/jwumpus/examples/img/left_grey.png")));
+		panel.add(btnMoveLeft);
 		
-		btnDown = new JButton("Down");
-		panel.add(btnDown);
+		btnMoveUp = new JButton("Move up");
+		btnMoveUp.setIcon(new ImageIcon(HumanInterface.class.getResource("/de/northernstars/jwumpus/examples/img/up_grey.png")));
+		panel.add(btnMoveUp);
 		
-		btnLeft = new JButton("Left");
-		panel.add(btnLeft);
+		btnMoveDown = new JButton("Move down");
+		btnMoveDown.setIcon(new ImageIcon(HumanInterface.class.getResource("/de/northernstars/jwumpus/examples/img/down_grey.png")));
+		panel.add(btnMoveDown);
 		
-		btnRight = new JButton("Right");
-		panel.add(btnRight);
+		btnMoveRight = new JButton("Move right");
+		btnMoveRight.setIcon(new ImageIcon(HumanInterface.class.getResource("/de/northernstars/jwumpus/examples/img/right_grey.png")));
+		panel.add(btnMoveRight);
+		
+		btnShootLeft = new JButton("Shoot left");
+		panel.add(btnShootLeft);
+		
+		btnShootUp = new JButton("Shoot up");
+		panel.add(btnShootUp);
+		
+		btnShootDown = new JButton("Shoot down");
+		panel.add(btnShootDown);
+		
+		btnShootRight = new JButton("Shoot right");
+		panel.add(btnShootRight);
 		
 		panelMap = new JPanel();
 		contentPane.add(panelMap, "2, 10, 3, 1, fill, fill");
