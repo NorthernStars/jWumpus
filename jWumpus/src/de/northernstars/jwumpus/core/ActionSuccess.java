@@ -19,6 +19,11 @@ public enum ActionSuccess {
 	WUMPUS_DEAD,
 	
 	/**
+	 * {@link Action} failed beacause the agend hits a wall
+	 */
+	HIT_WALL,
+	
+	/**
 	 * {@link Action} failed.
 	 * Agent can not do this {@link Action}
 	 */

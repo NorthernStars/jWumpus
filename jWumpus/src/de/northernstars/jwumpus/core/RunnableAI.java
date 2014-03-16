@@ -389,7 +389,7 @@ class RunnableAI implements Runnable{
 					else{
 						// action failed do nothing
 						logger.debug("Player can not move out of bounds!");
-						jWumpus.getAi().putLastActionSuccess(ActionSuccess.FAILED);
+						jWumpus.getAi().putLastActionSuccess(ActionSuccess.HIT_WALL);
 					}
 					
 				}
