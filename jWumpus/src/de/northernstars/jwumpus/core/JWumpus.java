@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.northernstars.jwumpus.core.helper.RunnableAI;
 import de.northernstars.jwumpus.gui.MainFrame;
 import de.northernstars.jwumpus.gui.listener.FrameLoadedListener;
 import de.northernstars.jwumpus.gui.listener.JWumpusControl;

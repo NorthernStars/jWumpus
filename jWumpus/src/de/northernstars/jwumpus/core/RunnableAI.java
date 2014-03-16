@@ -1,4 +1,4 @@
-package de.northernstars.jwumpus.core.helper;
+package de.northernstars.jwumpus.core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,13 +6,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.northernstars.jwumpus.core.Action;
-import de.northernstars.jwumpus.core.ActionSuccess;
-import de.northernstars.jwumpus.core.JWumpus;
-import de.northernstars.jwumpus.core.PlayerState;
-import de.northernstars.jwumpus.core.WumpusMap;
-import de.northernstars.jwumpus.core.WumpusMapObject;
-import de.northernstars.jwumpus.core.WumpusObjects;
 
 public /**
  * Class for processing AI action on extra thread.
