@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import de.northernstars.jwumpus.gui.Editor;
 import de.northernstars.jwumpus.gui.listener.FrameLoadedListener;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -25,6 +26,8 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class HumanInterface extends JFrame {
@@ -47,6 +50,8 @@ public class HumanInterface extends JFrame {
 	public JMenu mnFile;
 	public JMenuItem mntmLoadMap;
 	public JMenuItem mntmReset;
+	public JMenuItem mntmShowEditor;
+	public JMenuItem mntmClose;
 	
 
 	/**
@@ -90,6 +95,24 @@ public class HumanInterface extends JFrame {
 		mntmReset = new JMenuItem("Reset");
 		mntmReset.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));
 		mnFile.add(mntmReset);
+		
+		mntmShowEditor = new JMenuItem("Show editor");
+		mntmShowEditor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Editor.showEditor(null);
+			}
+		});
+		mntmShowEditor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK));
+		mnFile.add(mntmShowEditor);
+		
+		mntmClose = new JMenuItem("Close");
+		mntmClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		mntmClose.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
+		mnFile.add(mntmClose);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

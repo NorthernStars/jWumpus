@@ -81,6 +81,7 @@ public class Editor extends JFrame {
 	
 	/**
 	 * Launches the editor.
+	 * @param wumpusMap	{@link WumpusMap} to load or null to load empty default map
 	 */
 	public static void showEditor(WumpusMap wumpusMap) {
 		final WumpusMap mWumpusMap = wumpusMap;
