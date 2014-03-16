@@ -124,7 +124,14 @@ class RunnableAI implements Runnable{
 				}
 				else{
 					tm = System.currentTimeMillis() - timeoutTime;
-				}				
+				}
+				
+				// Wait to reduce cpu load
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 			process.active = false;
 			
@@ -237,6 +244,84 @@ class RunnableAI implements Runnable{
 		}
 	}
 	
+	/**
+	 * Tries to shoot wumpus
+	 * @param player	{@link WumpusMapObject} of player on map
+	 * @param action	{@link Action}
+	 * @return {@code true} if wumpus is dead, {@code false} otherwise
+	 */
+	private boolean shootWumpus(WumpusMapObject player, Action action){		
+		boolean hit = false;		
+		if( jWumpus.getPlayerArrows() > 0 ){
+			
+			// check all wumpi on map if they where hit by shoot
+			for( WumpusMapObject wumpus : jWumpus.getMap().getWumpusObjects(WumpusObjects.WUMPUS) ){
+				switch(action){
+				case SHOOT_UP:
+					if( wumpus.getColumn() == player.getColumn() && wumpus.getRow() > player.getRow() ){
+						hit = true;
+					}
+					break;
+					
+				case SHOOT_DOWN:
+					if( wumpus.getColumn() == player.getColumn() && wumpus.getRow() < player.getRow() ){
+						hit = true;
+					}
+					break;
+					
+				case SHOOT_LEFT:
+					if( wumpus.getRow() == player.getRow() && wumpus.getColumn() < player.getColumn() ){
+						hit = true;
+					}
+					break;
+					
+				case SHOOT_RIGHT:
+					if( wumpus.getRow() == player.getRow() && wumpus.getColumn() > player.getColumn() ){
+						hit = true;
+					}
+					break;
+					
+				default:
+					break;
+				}
+				
+				// check if wumpus is dead
+				if( hit ){
+					// remove wumpus
+					wumpus.remove(WumpusObjects.WUMPUS);
+					jWumpus.getMap().setWumpusMapObject(wumpus);
+					
+					// remove stenches
+					WumpusMapObject stench;
+					if( (stench=jWumpus.getMap().getWumpusMapObject(wumpus.getRow()-1, wumpus.getColumn())) != null ){
+						stench.remove(WumpusObjects.STENCH);
+						jWumpus.getMap().setWumpusMapObject( stench );
+					}
+					if( (stench=jWumpus.getMap().getWumpusMapObject(wumpus.getRow()+1, wumpus.getColumn())) != null ){
+						stench.remove(WumpusObjects.STENCH);
+						jWumpus.getMap().setWumpusMapObject( stench );
+					}
+					if( (stench=jWumpus.getMap().getWumpusMapObject(wumpus.getRow(), wumpus.getColumn()-1)) != null ){
+						stench.remove(WumpusObjects.STENCH);
+						jWumpus.getMap().setWumpusMapObject( stench );
+					}
+					if( (stench=jWumpus.getMap().getWumpusMapObject(wumpus.getRow(), wumpus.getColumn()+1)) != null ){
+						stench.remove(WumpusObjects.STENCH);
+						jWumpus.getMap().setWumpusMapObject( stench );
+					}
+					
+					break;
+				}				
+			}
+			
+			// update number of arrows
+			jWumpus.setPlayerArrows( jWumpus.getPlayerArrows() - 1 );
+			
+		}
+		
+		return hit;
+	}
+	
 	
 	@Override
 	public void run() {			
@@ -269,6 +354,9 @@ class RunnableAI implements Runnable{
 			
 			// put map into AI
 			jWumpus.getAi().putWumpusWorldMap( new WumpusMap(jWumpus.getAiMap()) );
+			
+			// put number of arrows to player
+			jWumpus.getAi().putPlayerArrows( jWumpus.getPlayerArrows() );
 			
 			// get action
 			Action action = getAction();
@@ -303,6 +391,13 @@ class RunnableAI implements Runnable{
 				else if( action.getShoots().contains(action) ){
 					
 					// action is shoot
+					if( shootWumpus(player, action) ){
+						jWumpus.getAi().putLastActionSuccess(ActionSuccess.SUCCESSFULL);
+					}
+					else{
+						jWumpus.getAi().putLastActionSuccess(ActionSuccess.FAILED);
+						logger.debug("Shoot wumpus failed!");
+					}
 					
 				}
 				

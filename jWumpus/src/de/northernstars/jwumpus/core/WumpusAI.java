@@ -30,6 +30,13 @@ public interface WumpusAI {
 	public void putRemainingTime(long time);
 	
 	/**
+	 * Called by jWumpus main class to put the remeaining arrows
+	 * of player to AI
+	 * @param arrows {@link Integer} of number of remaining arrows
+	 */
+	public void putPlayerArrows(int arrows);
+	
+	/**
 	 * Generates {@link Action} of player.
 	 * @return {@link Action}
 	 */

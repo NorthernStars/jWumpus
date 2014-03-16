@@ -61,21 +61,23 @@ public class Editor extends JFrame {
 	private WumpusObjects selectedTool = null;
 	
 	private JPanel contentPane;
-	private static JPanel panelMap;
-	private static JTextField txtColumns;
-	private static JTextField txtRows;
-	public JMenuBar menuBar;
-	public JMenu mnFile;
-	public JMenuItem mntmNewMap;
-	public JMenuItem mntmOpenMap;
-	public JMenuItem mntmSaveMap;
-	public JMenuItem mntmSaveMapAs;
-	public JButton btnUpdateMap;
-	public JLabel lblNewLabel;
-	public JTextField txtMapName;
-	public JMenuItem mntmClose;
-	public JScrollPane panelPaletteTop;
-	public JPanel panelPalette;
+	private JPanel panelMap;
+	private JTextField txtColumns;
+	private JTextField txtRows;
+	private JMenuBar menuBar;
+	private JMenu mnFile;
+	private JMenuItem mntmNewMap;
+	private JMenuItem mntmOpenMap;
+	private JMenuItem mntmSaveMap;
+	private JMenuItem mntmSaveMapAs;
+	private JButton btnUpdateMap;
+	private JLabel lblNewLabel;
+	private JTextField txtMapName;
+	private JMenuItem mntmClose;
+	private JScrollPane panelPaletteTop;
+	private JPanel panelPalette;
+	private JLabel lblPlayerArrows;
+	private JTextField txtPlayerArrows;
 	
 	/**
 	 * Launches the editor.
@@ -201,6 +203,8 @@ public class Editor extends JFrame {
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 		
 		JLabel lblNewLabel1 = new JLabel("Columns:");
@@ -225,12 +229,15 @@ public class Editor extends JFrame {
 		btnUpdateMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int mapDimension[] = getMapDimensionFromGui();
+				int playerArrows = getPlayerArrowsFromGui();
 				String mapName = txtMapName.getText();
+				
 				if( map != null
 						&& mapDimension[0] > 0 && mapDimension[1] > 0 ){
 					map.setRows(mapDimension[0]);
 					map.setColumns(mapDimension[1]);
 					map.setMapName(mapName);
+					map.setPlayerArrows(playerArrows);
 					updateGuiMap();
 				}
 			}
@@ -244,7 +251,16 @@ public class Editor extends JFrame {
 		txtMapName.setText("Wumpus World");
 		panelMapData.add(txtMapName, "4, 6, fill, default");
 		txtMapName.setColumns(10);
-		panelMapData.add(btnUpdateMap, "2, 8, 3, 1");
+		
+		lblPlayerArrows = new JLabel("Player arrows:");
+		lblPlayerArrows.setHorizontalAlignment(SwingConstants.RIGHT);
+		panelMapData.add(lblPlayerArrows, "2, 8, right, default");
+		
+		txtPlayerArrows = new JTextField();
+		txtPlayerArrows.setText("1");
+		panelMapData.add(txtPlayerArrows, "4, 8, fill, default");
+		txtPlayerArrows.setColumns(10);
+		panelMapData.add(btnUpdateMap, "2, 10, 3, 1");
 		
 		panelPaletteTop = new JScrollPane();
 		panelPaletteTop.setBorder(new TitledBorder(null, "Palette", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -294,6 +310,20 @@ public class Editor extends JFrame {
 		}
 		
 		return new int[]{0,0};
+	}
+	
+	/**
+	 * @return {@link Integer} number of arrows for player on map
+	 */
+	private int getPlayerArrowsFromGui(){
+		try{
+			int arrows = Integer.parseInt(txtPlayerArrows.getText());
+			return arrows;
+		}catch (NumberFormatException e){
+			logger.error("Player arrows field contains no integer value.");
+		}
+		
+		return 0;
 	}
 	
 	/**

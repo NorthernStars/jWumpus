@@ -41,6 +41,8 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 	
 	@SuppressWarnings("unused")
 	private WumpusMap mMap;
+	@SuppressWarnings("unused")
+	private int arrows = 0;
 	private Action action = null;
 
 	/**
@@ -119,6 +121,12 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 			gui.pgbRemainingTime.setMaximum( (int) JWumpus.timeoutAI );
 			gui.pgbRemainingTime.setValue( (int) (JWumpus.timeoutAI - time) );
 		}
+	}
+	
+	@Override
+	public void putPlayerArrows(int arrows) {
+		// update remaining arrows
+		this.arrows = arrows;
 	}
 
 	@Override

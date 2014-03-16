@@ -70,6 +70,7 @@ public class MainFrame extends JFrame {
 	private JLabel lblPlayerState;
 	private JLabel lblCurrentStep;
 	private JButton btnNext;
+	private JLabel lblPlayerArrows;
 
 	/**
 	 * Launch the application.
@@ -259,9 +260,11 @@ public class MainFrame extends JFrame {
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 		
-		JLabel lblNewLabel2 = new JLabel("Status:");
+		JLabel lblNewLabel2 = new JLabel("Player status:");
 		lblNewLabel2.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel.add(lblNewLabel2, "2, 2");
 		
@@ -274,6 +277,13 @@ public class MainFrame extends JFrame {
 		
 		lblCurrentStep = new JLabel("0");
 		panel.add(lblCurrentStep, "4, 4");
+		
+		JLabel lblNewLabel_1 = new JLabel("Arrows:");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		panel.add(lblNewLabel_1, "2, 6");
+		
+		lblPlayerArrows = new JLabel("");
+		panel.add(lblPlayerArrows, "4, 6");
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -353,10 +363,12 @@ public class MainFrame extends JFrame {
 	 * Sets current status
 	 * @param currentStep	Current step {@link Integer}
 	 * @param playerState	{@link PlayerState}
+	 * @param playerArrows	{@link Integer} number of remaining arrows for player
 	 */
-	public void setStatus(int currentStep, PlayerState playerState){
+	public void setStatus(int currentStep, PlayerState playerState, int playerArrows){
 		lblCurrentStep.setText( Integer.toString(currentStep) );
 		lblPlayerState.setText( playerState.name() );
+		lblPlayerArrows.setText( Integer.toString(playerArrows) );
 		
 		if( playerState == PlayerState.UNKNOWN ){
 			btnStart.setText("Start");

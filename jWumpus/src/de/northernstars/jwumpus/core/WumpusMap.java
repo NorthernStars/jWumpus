@@ -13,6 +13,7 @@ public class WumpusMap {
 	private String mapName = "map";
 	private int rows = 0;
 	private int columns = 0;
+	private int playerArrows = 1;
 	private List<WumpusMapObject> map = new ArrayList<WumpusMapObject>();
 	private boolean checkDimension = true;
 	
@@ -49,6 +50,7 @@ public class WumpusMap {
 			setWumpusMapObject( new WumpusMapObject(mapObject) );
 		}
 		setCheckDimension( map.getCheckDimension() );
+		setPlayerArrows(map.getPlayerArrows());
 	}
 	
 	/**
@@ -107,7 +109,7 @@ public class WumpusMap {
 	 * Gets {@link WumpusMapObject} at specific position
 	 * @param row		Row on map
 	 * @param column	Column on map
-	 * @return {@link WumpusMapObject} at position [{@code row}, {@ode column}]
+	 * @return {@link WumpusMapObject} at position [{@code row}, {@ode column}] or {@code null} if there is no object
 	 */
 	public WumpusMapObject getWumpusMapObject(int row, int column){
 		if( !getCheckDimension() || (row < getRows() && column < getColumns()) ){
@@ -241,6 +243,20 @@ public class WumpusMap {
 	public void setColumns(int columns) {
 		this.columns = columns;
 		updateMapObjects();
+	}
+	
+	/**
+	 * @return the playerArrows
+	 */
+	public int getPlayerArrows() {
+		return playerArrows;
+	}
+
+	/**
+	 * @param playerArrows the playerArrows to set
+	 */
+	public void setPlayerArrows(int playerArrows) {
+		this.playerArrows = playerArrows;
 	}
 	
 	/**

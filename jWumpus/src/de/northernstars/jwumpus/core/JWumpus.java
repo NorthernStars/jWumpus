@@ -21,6 +21,7 @@ import de.northernstars.jwumpus.gui.listener.JWumpusControl;
 public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	
 	public static long timeoutAI = 5000;
+	
 	private static final Logger logger = LogManager.getLogger(JWumpus.class);
 	private MainFrame gui;
 	private RunnableAI runnableAI;
@@ -30,6 +31,7 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	private WumpusMap aiMap;
 	private WumpusMap vMap;
 	private PlayerState playerState;
+	private int playerArrows = 0;
 	private int aiSteps = 0;
 	
 	/**
@@ -91,7 +93,7 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 				public void run() {
 					// show map and status
 					getGui().setMap( getMap() );
-					getGui().setStatus( getAiSteps(), getPlayerState() );
+					getGui().setStatus( getAiSteps(), getPlayerState(), getPlayerArrows() );
 					
 					// show ai map
 					getGui().setAiMap( getAiMap() );
@@ -201,6 +203,8 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	public void mapLoaded(WumpusMap map) {
 		this.map = new WumpusMap(map);
 		vMap = new WumpusMap(map);
+		setPlayerArrows(this.map.getPlayerArrows());
+		updateGui();
 	}
 
 	@Override
@@ -274,6 +278,21 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	 */
 	protected void setAiMap(WumpusMap aiMap) {
 		this.aiMap = aiMap;
+	}
+
+	/**
+	 * @return the playerArrows
+	 */
+	protected int getPlayerArrows() {
+		return playerArrows;
+	}
+
+	/**
+	 * @param playerArrows the playerArrows to set
+	 */
+	protected void setPlayerArrows(int playerArrows) {
+		this.playerArrows = playerArrows;
+		logger.debug("plyaer arrows = " + this.playerArrows);
 	}
 
 }
