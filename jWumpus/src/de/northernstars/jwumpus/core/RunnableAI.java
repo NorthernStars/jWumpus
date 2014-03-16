@@ -275,24 +275,35 @@ class RunnableAI implements Runnable{
 			
 			// check if action is null
 			if( action != null ){
-			
-				// calculate players new positions on maps
-				List<int[]> positions = calculateNextPlayersPositions(player, aiPlayer, action);
 				
-				// check if player can move
-				if( positions.get(0)[0] >= 0 && positions.get(0)[0] < jWumpus.getMap().getRows()
-						&& positions.get(0)[1] >= 0 && positions.get(0)[1] < jWumpus.getMap().getRows() ){
+				// check if action is movement or shoot
+				if( action.getMovements().contains(action) ){
+			
+					// action is movement
+					// calculate players new positions on maps
+					List<int[]> positions = calculateNextPlayersPositions(player, aiPlayer, action);
 					
-					// move players
-					movePlayers(player, aiPlayer, positions);
+					// check if player can move
+					if( positions.get(0)[0] >= 0 && positions.get(0)[0] < jWumpus.getMap().getRows()
+							&& positions.get(0)[1] >= 0 && positions.get(0)[1] < jWumpus.getMap().getRows() ){
+						
+						// move players
+						movePlayers(player, aiPlayer, positions);
+						
+						// set success
+						jWumpus.getAi().putLastActionSuccess(ActionSuccess.SUCCESSFULL);
+					}
+					else{
+						// action failed do nothing
+						logger.debug("Player can not move out of bounds!");
+						jWumpus.getAi().putLastActionSuccess(ActionSuccess.FAILED);
+					}
 					
-					// set success
-					jWumpus.getAi().putLastActionSuccess(ActionSuccess.SUCCESSFULL);
 				}
-				else{
-					// action failed do nothing
-					logger.debug("Player can not move out of bounds!");
-					jWumpus.getAi().putLastActionSuccess(ActionSuccess.FAILED);
+				else if( action.getShoots().contains(action) ){
+					
+					// action is shoot
+					
 				}
 				
 			}
