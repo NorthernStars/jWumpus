@@ -39,34 +39,52 @@
 <h2>
 <a name="project-description" class="anchor" href="#project-description"><span class="octicon octicon-link"></span></a>Project description</h2>
 
-<p>jWumpus is a java based library for easy programming own artrifical intelligences to solve the wumpus world problem.</p>
+<p>jWumpus is a java based library for easy programming of own artrifical intelligences (AI) to solve the wumpus world problem.</p>
 
-<p>jWumpus includes a set of objects like a wumpus world map, objets on that map, action a agend can do and more to make programming an own AI easier. Also a graphical user interface and an editor are included to easily manage AI processing and wumpus world map creation.</p>
+<p>jWumpus includes a set of objects like a wumpus world map, objets on that map, actions an AI agend can do and more to make programming an own AI easier. Also a graphical user interface and an editor are included to easily manage AI processing and wumpus world map creation.</p>
 
 <h3>
 <a name="wumpus-world-problem" class="anchor" href="#wumpus-world-problem"><span class="octicon octicon-link"></span></a>Wumpus world problem</h3>
 
 <p>Inside the wumpus world there is an agent that wants to find the gold of the monster called wumpus.
-The world consists of rectangular fields. The agend can move only one field up, down, left or right.</p>
+The world consists of rectangular fields. Each step the agend can move only one field up, down, left or right.</p>
 
 <p>At the fields around the wumpus the agent can smell a stench. At the fields around a trap the agend can fell a breeze. And (depending on the variant of the problem) at the fields around the gold a twinkle.
-The agend knows always on wich field he is but can not see anithing of the world on start.</p>
+The agend knows always on wich field he is but can not see anything of the world except the field hes standing on.</p>
 
 <p><img src="https://f.cloud.github.com/assets/3993793/2423907/d7e2ccba-aba0-11e3-8c19-69e2d3736dcd.png" alt="600px-wumpus_welt svg"></p>
 
-<p>The agent also has a bow with one arrow. Using this bow he can try to shoot the wumpus by shooting into one direction (up, down, left, right).</p>
+<p>The agent also has a bow with one ore more arrows. Using this bow he can try to shoot the wumpus by shooting into one direction (up, down, left, right).</p>
 
 <p>The agend has to move through the wumpus world and tries to find the gold and detect positions of traps and the wumpus.</p>
-
-<h3>
-<a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h3>
-
-<p><img src="https://f.cloud.github.com/assets/3993793/2423971/b5da81e8-aba1-11e3-8481-9492472c4382.png" alt="editor"></p>
 
 <h2>
 <a name="starting-with-jwumpus" class="anchor" href="#starting-with-jwumpus"><span class="octicon octicon-link"></span></a>Starting with jWumpus</h2>
 
-<p>If you includes jWumpus into your build path, create a new class for you AI and implement the <code>WumpusAI</code> interface from jWumpus. The interface includes a set of functions. Take a look at the examples to knwo more about them. Most important are the functions <code>public void putWumpusWorldMap(WumpusMap map)</code> wich is called by jWumpus main class to put a new wumpus world map into your AI and <code>public Movement getMovement()</code> wich calculates a <code>Movement</code> depending on the <code>WumpusMap</code> your AI gets from jWumpus main class.</p>
+<p>To start include jWumpus into your build path, create a new class for you AI and implement the <code>WumpusAI</code> interface from jWumpus. The interface includes a set of functions. Take a look at the examples to knwo more about that.</p>
+
+<p>Most important are the functions <code>public void putWumpusWorldMap(WumpusMap map)</code> wich is called by jWumpus main class to put a new wumpus world map into your AI and <code>public Action getAction()</code> wich calculates a <code>Action</code> depending on the <code>WumpusMap</code> your AI gets from jWumpus main class.</p>
+
+<p>To start the AI use a call like
+<code>new JWumpus( new ExampleAI() );</code>
+wich generates a new JWumpus object and passes a new AI instance to it. The JWumpus objects start the graphical user interface that offers control to load a map, or requesting the next action to do from AI.</p>
+
+<h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<p>jWumpus includes two examples. Each example includes a own main function so that they can get started directly from within projects directory.</p>
+
+<h3>
+<a name="examplehumaninterface" class="anchor" href="#examplehumaninterface"><span class="octicon octicon-link"></span></a>ExampleHumanInterface</h3>
+
+<p>ExampleHumanInterface shows the general graphical user interface that offers direct access to the control functions of JWumpus class. It also loads a interface to set the next action the AI should do.
+<img src="https://raw.github.com/NorthernStars/jWumpus/master/screenshots/ExampleHumanInterface.jpg" alt="/ExampleHumanInterface"></p>
+
+<h3>
+<a name="examplehumaninterfaceonly" class="anchor" href="#examplehumaninterfaceonly"><span class="octicon octicon-link"></span></a>ExampleHumanInterfaceOnly</h3>
+
+<p>ExampleHumanInterfaceOnly shows only a interface for loading a map or showing the map editor. If a map is loaded the AI automatically starts a automatic step processing and the next action the AI should do could be set through the graphical user interface.
+<img src="https://raw.github.com/NorthernStars/jWumpus/master/screenshots/ExampleHumanInterfaceOnly.jpg" alt="ExampleHumanInterfaceOnly"></p>
       </section>
     </div>
 
