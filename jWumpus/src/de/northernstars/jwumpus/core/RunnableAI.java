@@ -106,9 +106,10 @@ class RunnableAI implements Runnable{
 			
 			// get action from AI
 			GetActionFromAiRunnable process = new GetActionFromAiRunnable(jWumpus);
-			long timeoutTime = 0;
-			long tm = System.currentTimeMillis();
+			(new Thread(process)).start();
 			
+			long timeoutTime = 0;
+			long tm = System.currentTimeMillis();			
 			/* Wait for action from AI until:
 			 * - Action is not null
 			 * - timout
@@ -123,22 +124,12 @@ class RunnableAI implements Runnable{
 				}
 				else{
 					tm = System.currentTimeMillis() - timeoutTime;
-				}
-				
-				// Wait to reduce cpu load
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
+				}				
 			}
 			process.active = false;
 			
-			// check action
-			if( action == null ){
-				action = Action.NO_ACTION;
-			}
+			// set action
+			action = process.action;
 			
 			// check for timeout
 			if( timeoutTime >= JWumpus.timeoutAI ){
@@ -307,7 +298,7 @@ class RunnableAI implements Runnable{
 			}
 				
 			// increase ai steps
-			if( action != Action.NO_ACTION ){
+			if( action != null ){
 				jWumpus.setAiSteps( jWumpus.getAiSteps()+1 );
 			}
 			
@@ -351,7 +342,14 @@ class GetActionFromAiRunnable implements Runnable{
 	
 	@Override
 	public void run() {
-		while( active && (action=jWumpus.getAi().getAction()) == null );
+		while( active && (action=jWumpus.getAi().getAction()) == null ){
+			// Wait to reduce cpu load
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 }

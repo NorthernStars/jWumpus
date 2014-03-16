@@ -415,7 +415,12 @@ public class MainFrame extends JFrame {
 	 * @param aiMap {@link WumpusMap}
 	 */
 	public void setAiMap(WumpusMap aiMap){
-		this.aiMap = new WumpusMap(aiMap);
+		if( aiMap != null ){
+			this.aiMap = new WumpusMap(aiMap);
+		}
+		else{
+			this.aiMap = null;
+		}
 		updateAiMap();
 	}
 	
@@ -459,10 +464,10 @@ public class MainFrame extends JFrame {
 	 * @param panel		{@link JPanel} where to show {@code map}
 	 */
 	public static void updateGuiMap(Editor editor, WumpusMap map, JPanel panel){
-		if( map != null && panel != null ){			
-			// clear gui map
-			panel.removeAll();
-			
+		// clear gui map
+		panel.removeAll();
+		
+		if( map != null && panel != null ){		
 			// update maps dimension			
 			if( !map.getCheckDimension() ){
 				map.updateDimensions();
@@ -487,12 +492,12 @@ public class MainFrame extends JFrame {
 					}
 					panel.add( new MapObject(editor, map, mapObject) );
 				}
-			}
-			
-			// redraw gui map panel
-			panel.repaint();
-			panel.validate();			
+			}			
 		}
+		
+		// redraw gui map panel
+		panel.repaint();
+		panel.validate();
 	}
 	
 }
