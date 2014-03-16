@@ -15,6 +15,8 @@ import com.jgoodies.forms.factories.FormFactory;
 import de.northernstars.jwumpus.core.PlayerState;
 import de.northernstars.jwumpus.core.WumpusMap;
 import de.northernstars.jwumpus.core.WumpusMapObject;
+import de.northernstars.jwumpus.gui.listener.FrameLoadedListener;
+import de.northernstars.jwumpus.gui.listener.JWumpusControl;
 import de.northernstars.jwumpus.gui.widgets.MapObject;
 
 import javax.swing.JLabel;

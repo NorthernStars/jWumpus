@@ -15,7 +15,7 @@ import de.northernstars.jwumpus.core.Action;
 import de.northernstars.jwumpus.core.PlayerState;
 import de.northernstars.jwumpus.core.WumpusAI;
 import de.northernstars.jwumpus.core.WumpusMap;
-import de.northernstars.jwumpus.gui.FrameLoadedListener;
+import de.northernstars.jwumpus.gui.listener.FrameLoadedListener;
 
 public class ExampleHumanInterface {
 

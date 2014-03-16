@@ -1,4 +1,4 @@
-package de.northernstars.jwumpus.gui;
+package de.northernstars.jwumpus.gui.listener;
 
 import de.northernstars.jwumpus.core.WumpusMap;
 

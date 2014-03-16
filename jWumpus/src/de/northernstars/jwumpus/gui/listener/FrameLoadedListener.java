@@ -1,4 +1,4 @@
-package de.northernstars.jwumpus.gui;
+package de.northernstars.jwumpus.gui.listener;
 
 import javax.swing.JFrame;
 
