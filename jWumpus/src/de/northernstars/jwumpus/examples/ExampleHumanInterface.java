@@ -127,6 +127,10 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 	public void putPlayerArrows(int arrows) {
 		// update remaining arrows
 		this.arrows = arrows;
+		
+		if( gui != null ){
+			gui.lblPlayerArrows.setText( Integer.toString(arrows) );
+		}
 	}
 
 	@Override

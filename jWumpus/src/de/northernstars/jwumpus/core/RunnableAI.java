@@ -115,9 +115,9 @@ class RunnableAI implements Runnable{
 			 * - timout
 			 * If pause set until waiting for Action. Do noting.
 			 */				
-			while( (process.action == null
+			while( active && ((process.action == null
 					&& (timeoutTime = System.currentTimeMillis()-tm) < JWumpus.timeoutAI)
-					|| pause){
+					|| pause) ){
 				
 				if( !pause ){
 					jWumpus.getAi().putRemainingTime(timeoutTime);
@@ -361,6 +361,11 @@ class RunnableAI implements Runnable{
 			// get action
 			Action action = getAction();
 			
+			// check if thread stopped
+			if( !active ){
+				break;
+			}
+			
 			// check if action is null
 			if( action != null ){
 				
@@ -392,7 +397,7 @@ class RunnableAI implements Runnable{
 					
 					// action is shoot
 					if( shootWumpus(player, action) ){
-						jWumpus.getAi().putLastActionSuccess(ActionSuccess.SUCCESSFULL);
+						jWumpus.getAi().putLastActionSuccess(ActionSuccess.WUMPUS_DEAD);
 					}
 					else{
 						jWumpus.getAi().putLastActionSuccess(ActionSuccess.FAILED);
@@ -407,6 +412,12 @@ class RunnableAI implements Runnable{
 			if( action != null ){
 				jWumpus.setAiSteps( jWumpus.getAiSteps()+1 );
 			}
+			
+			// put map into AI
+			jWumpus.getAi().putWumpusWorldMap( new WumpusMap(jWumpus.getAiMap()) );
+			
+			// put number of arrows to player
+			jWumpus.getAi().putPlayerArrows( jWumpus.getPlayerArrows() );
 			
 			// update jWumpus gui
 			jWumpus.updateGui();

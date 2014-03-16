@@ -6,12 +6,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.google.gson.Gson;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 
+import de.northernstars.jwumpus.core.JWumpus;
 import de.northernstars.jwumpus.core.PlayerState;
 import de.northernstars.jwumpus.core.WumpusMap;
 import de.northernstars.jwumpus.core.WumpusMapObject;
@@ -47,8 +47,6 @@ import javax.swing.UIManager;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
@@ -236,7 +234,20 @@ public class MainFrame extends JFrame {
 					control.resetAI();
 					btnReset.setEnabled(false);
 					btnNext.setEnabled(true);
-					loadMap();
+					WumpusMap vMap = JWumpus.loadMap(mapFile);
+					
+					// set map
+					if( vMap != null ){
+						setMap(vMap);
+						
+						// call JWumpusControl listener
+						if( control != null ){
+							control.mapLoaded(map);
+						}
+						else{
+							logger.error("No JWumpusControl listener set!");
+						}
+					}
 				}
 				else{
 					logger.error("No JWumpusControl listener set!");
@@ -379,35 +390,10 @@ public class MainFrame extends JFrame {
 	}
 	
 	/**
-	 * Loads map from mapFile
+	 * Shows a file loading dialog.
+	 * @return {@link File} object of loaded file or {@code null} if file could ne be loaded
 	 */
-	private void loadMap(){
-		try{
-			// check if map can get loaded
-			if( mapFile != null && mapFile.exists() && mapFile.canRead() ){
-				setMap( (new Gson()).fromJson(new FileReader(mapFile), WumpusMap.class) );
-				logger.debug("Loaded map " + map.getMapName());
-				
-				// call JWumpusControl listener
-				if( control != null ){
-					control.mapLoaded(map);
-				}
-				else{
-					logger.error("No JWumpusControl listener set!");
-				}
-			}
-			else{
-				logger.error("Can not read from file " + mapFile.getPath());
-			}
-		}catch (FileNotFoundException e){
-			logger.error("Can not find file " + mapFile.getPath());
-		}
-	}
-	
-	/**
-	 * Opens a map from file
-	 */
-	private void openMap(){
+	public static File openFile(){
 		// create file chooser dialog and open it
 		JFileChooser chooser = new JFileChooser();
 		FileFilter filter = new FileNameExtensionFilter("jWumpus map files (.map)", "map");
@@ -417,8 +403,34 @@ public class MainFrame extends JFrame {
 		chooser.setSelectedFile(new File("wumpus world.map"));
 		
 		if( chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION ){
-			mapFile = chooser.getSelectedFile();
-			loadMap();
+			return chooser.getSelectedFile();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Opens a map from file and loads it into gui
+	 */
+	private void openMap(){
+		// create file chooser dialog and open it
+		mapFile = openFile();
+		
+		if( mapFile != null ){
+			WumpusMap vMap = JWumpus.loadMap(mapFile);
+			
+			// set map
+			if( vMap != null ){
+				setMap(vMap);
+				
+				// call JWumpusControl listener
+				if( control != null ){
+					control.mapLoaded(map);
+				}
+				else{
+					logger.error("No JWumpusControl listener set!");
+				}
+			}
 		}
 	}
 	

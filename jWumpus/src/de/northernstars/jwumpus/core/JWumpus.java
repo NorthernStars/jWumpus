@@ -1,12 +1,17 @@
 package de.northernstars.jwumpus.core;
 
 import java.awt.EventQueue;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.List;
 
 import javax.swing.JFrame;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
 
 import de.northernstars.jwumpus.gui.MainFrame;
 import de.northernstars.jwumpus.gui.listener.FrameLoadedListener;
@@ -85,7 +90,7 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	/**
 	 * Updates gui, if gui is loaded
 	 */
-	public void updateGui(){
+	protected void updateGui(){
 		if( getGui() != null ){			
 			EventQueue.invokeLater( new Runnable() {
 				
@@ -292,7 +297,29 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	 */
 	protected void setPlayerArrows(int playerArrows) {
 		this.playerArrows = playerArrows;
-		logger.debug("plyaer arrows = " + this.playerArrows);
+	}
+	
+	/**
+	 * Loads a {@link WumpusMap} from file.
+	 * @param file	{@link File} to load {@link WumpusMap} from
+	 * @return	{@link WumpusMap} or {@code null} if map could not be loaded
+	 */
+	public static WumpusMap loadMap(File file){
+		WumpusMap map = null;
+		try{
+			// check if map can get loaded
+			if( file != null && file.exists() && file.canRead() ){
+				map = (new Gson()).fromJson(new FileReader(file), WumpusMap.class);
+				logger.debug("Loaded map " + map.getMapName());
+			}
+			else{
+				logger.error("Can not read from file " + file.getPath());
+			}
+		}catch (FileNotFoundException e){
+			logger.error("Can not find file " + file.getPath());
+		}
+		
+		return map;
 	}
 
 }

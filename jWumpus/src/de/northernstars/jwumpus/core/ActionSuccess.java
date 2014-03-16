@@ -14,6 +14,11 @@ public enum ActionSuccess {
 	SUCCESSFULL,
 	
 	/**
+	 * {@link Action} was successfull and oen wumpus is dead.
+	 */
+	WUMPUS_DEAD,
+	
+	/**
 	 * {@link Action} failed.
 	 * Agent can not do this {@link Action}
 	 */
