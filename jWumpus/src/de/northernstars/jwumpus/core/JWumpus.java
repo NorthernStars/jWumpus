@@ -88,6 +88,20 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	}
 	
 	/**
+	 * @return {@link Integer} number of wumpi on map
+	 */
+	public int getNumOfWumpus(){
+		return getMap().getWumpusObjects(WumpusObjects.WUMPUS).size();
+	}
+	
+	/**
+	 * @return {@link Integer} number of golds on map
+	 */
+	public int getNumOfGolds(){
+		return getMap().getWumpusObjects(WumpusObjects.GOLD).size();
+	}
+	
+	/**
 	 * Updates gui, if gui is loaded
 	 */
 	protected void updateGui(){
