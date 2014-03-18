@@ -81,7 +81,7 @@ public class MapObject extends JPanel implements MouseListener {
 			}
 			
 			// set background color
-			if( !wumpusMapObject.isVisited() ){
+			if( !map.getCheckDimension() && !wumpusMapObject.isVisited() ){
 				setBackground(Color.GRAY);
 				setOpaque(true);
 			}
