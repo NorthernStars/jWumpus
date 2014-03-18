@@ -48,4 +48,14 @@ public interface JWumpusControl {
 	 */
 	public void close();
 	
+	/**
+	 * @return {@link Integer} number of wumpi on map
+	 */
+	public int getNumOfWumpi();
+	
+	/**
+	 * @return {@link Integer} number of golds on map
+	 */
+	public int getNumOfGolds();
+	
 }

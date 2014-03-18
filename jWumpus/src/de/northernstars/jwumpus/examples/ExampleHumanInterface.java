@@ -55,7 +55,7 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 		JWumpus.timeoutAI = 30000;	// 30 sec. timeout
 		
 		// show human interface gui
-		HumanInterface.showHumanINterface(this);
+		HumanInterface.showHumanInterface(this);
 	}
 	
 	@Override
@@ -196,9 +196,9 @@ class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 			}
 			
 			if( action != null ){
-				logger.debug("Set action to " + action);
+				logger.debug("Set action: " + action);
 			}
 		}
-	}
+	}	
 	
 }

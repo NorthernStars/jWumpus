@@ -87,16 +87,12 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 		return null;
 	}
 	
-	/**
-	 * @return {@link Integer} number of wumpi on map
-	 */
-	public int getNumOfWumpus(){
+	@Override
+	public int getNumOfWumpi(){
 		return getMap().getWumpusObjects(WumpusObjects.WUMPUS).size();
 	}
 	
-	/**
-	 * @return {@link Integer} number of golds on map
-	 */
+	@Override
 	public int getNumOfGolds(){
 		return getMap().getWumpusObjects(WumpusObjects.GOLD).size();
 	}

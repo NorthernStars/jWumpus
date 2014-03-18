@@ -54,12 +54,16 @@ public class HumanInterface extends JFrame {
 	public JMenuItem mntmReset;
 	public JMenuItem mntmShowEditor;
 	public JMenuItem mntmClose;
+	public JLabel lblWumpiLeft;
+	private JLabel lblWumpiLeft_1;
+	public JLabel lblGoldLeft;
+	private JLabel lblGoldLeft_1;
 	
 
 	/**
 	 * Launch the application.
 	 */
-	public static void showHumanINterface(FrameLoadedListener listener) {
+	public static void showHumanInterface(FrameLoadedListener listener) {
 		final FrameLoadedListener vListener = listener;
 		
 		EventQueue.invokeLater(new Runnable() {
@@ -122,7 +126,11 @@ public class HumanInterface extends JFrame {
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
+				ColumnSpec.decode("max(50dlu;min):grow"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(50dlu;default):grow"),
 				FormFactory.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -153,6 +161,13 @@ public class HumanInterface extends JFrame {
 		lblPlayerState = new JLabel("UNKNOWN");
 		contentPane.add(lblPlayerState, "4, 4");
 		
+		lblWumpiLeft_1 = new JLabel("Wumpi left:");
+		lblWumpiLeft_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		contentPane.add(lblWumpiLeft_1, "6, 4");
+		
+		lblWumpiLeft = new JLabel("0");
+		contentPane.add(lblWumpiLeft, "8, 4");
+		
 		JLabel lblNewLabel_2 = new JLabel("Player arrows:");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
 		contentPane.add(lblNewLabel_2, "2, 6");
@@ -160,17 +175,24 @@ public class HumanInterface extends JFrame {
 		lblPlayerArrows = new JLabel("0");
 		contentPane.add(lblPlayerArrows, "4, 6");
 		
+		lblGoldLeft_1 = new JLabel("Total golds:");
+		lblGoldLeft_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		contentPane.add(lblGoldLeft_1, "6, 6");
+		
+		lblGoldLeft = new JLabel("0");
+		contentPane.add(lblGoldLeft, "8, 6");
+		
 		JLabel lblRemainingTime = new JLabel("Remaining time:");
 		lblRemainingTime.setHorizontalAlignment(SwingConstants.RIGHT);
 		contentPane.add(lblRemainingTime, "2, 8");
 		
 		pgbRemainingTime = new JProgressBar();
 		pgbRemainingTime.setMaximum(5000);
-		contentPane.add(pgbRemainingTime, "4, 8");
+		contentPane.add(pgbRemainingTime, "4, 8, 5, 1");
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Next action", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		contentPane.add(panel, "2, 10, 3, 1, fill, fill");
+		contentPane.add(panel, "2, 10, 7, 1, fill, fill");
 		panel.setLayout(new GridLayout(0, 4, 0, 5));
 		
 		btnMoveLeft = new JButton("Move left");
@@ -202,12 +224,11 @@ public class HumanInterface extends JFrame {
 		panel.add(btnShootRight);
 		
 		panelMap = new JPanel();
-		contentPane.add(panelMap, "2, 12, 3, 1, fill, fill");
+		contentPane.add(panelMap, "2, 12, 7, 1, fill, fill");
 		
 		// call listener
 		if( listener != null ){
 			listener.frameLoaded(this, this.getClass());
 		}
 	}
-
 }

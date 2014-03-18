@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-
 import javax.swing.JFrame;
 
 import org.apache.logging.log4j.LogManager;
@@ -64,7 +63,7 @@ class ExampleAiNoGui implements WumpusAI, FrameLoadedListener, ActionListener{
 		JWumpus.timeoutAI = 30000;	// 30 sec. timeout
 		
 		// show human interface gui
-		HumanInterface.showHumanINterface(this);
+		HumanInterface.showHumanInterface(this);
 	}
 	
 	/**
@@ -97,6 +96,8 @@ class ExampleAiNoGui implements WumpusAI, FrameLoadedListener, ActionListener{
 		if( gui != null ){
 			// using MainFrame static function to update a JPanel with current map
 			MainFrame.updateGuiMap(mMap, gui.panelMap);
+			gui.lblWumpiLeft.setText( Integer.toString(jWumpus.getNumOfWumpi()) );
+			gui.lblGoldLeft.setText( Integer.toString(jWumpus.getNumOfGolds()) );
 			gui.setTitle(HumanInterface.title + " - " + mMap.getMapName());
 		}
 	}
@@ -238,13 +239,10 @@ class ExampleAiNoGui implements WumpusAI, FrameLoadedListener, ActionListener{
 			else if( source == gui.btnShootUp ){
 				action = Action.SHOOT_UP;
 			}
-			
-			if( action != null ){
-				logger.debug("Set action to " + action);
-				
-				// process next step
-				jWumpus.nextAIStep();
-			}
+		}
+		
+		if( action != null ){
+			logger.debug("Set action: " + action);
 		}
 		
 		// check menu items
