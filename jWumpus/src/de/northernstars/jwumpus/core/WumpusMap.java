@@ -64,7 +64,7 @@ public class WumpusMap {
 			removeWumpusMapObject(object.getRow(), object.getColumn());
 			
 			// add new object
-			if( object.getObjectsList().size() > 0 ){
+			if( !getCheckDimension() || object.getObjectsList().size() > 0 ){
 				getMap().add(object);				
 			}
 			
