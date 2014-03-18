@@ -513,6 +513,7 @@ public class MainFrame extends JFrame {
 					WumpusMapObject mapObject = map.getWumpusMapObject(row, column);
 					if( mapObject == null ){
 						mapObject = new WumpusMapObject(row, column);
+						mapObject.setVisited(false);
 					}
 					panel.add( new MapObject(editor, map, mapObject) );
 				}

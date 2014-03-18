@@ -12,6 +12,7 @@ public class WumpusMapObject {
 
 	private int row = 0;
 	private int column = 0;
+	private boolean visited = true;
 	private List<WumpusObjects> objectsList = new ArrayList<WumpusObjects>();
 	
 
@@ -26,7 +27,7 @@ public class WumpusMapObject {
 	}
 	
 	/**
-	 * Construcotr
+	 * Constructor
 	 * @param row			Row of position on map
 	 * @param column		Coulumn of position on map
 	 * @param objectsList	{@link List} of {@link WumpusObjects} at this map position
@@ -126,6 +127,20 @@ public class WumpusMapObject {
 			ret += " " + object;
 		}
 		return ret;
+	}
+
+	/**
+	 * @return the visited
+	 */
+	public boolean isVisited() {
+		return visited;
+	}
+
+	/**
+	 * @param visited the visited to set
+	 */
+	public void setVisited(boolean visited) {
+		this.visited = visited;
 	}
 	
 }

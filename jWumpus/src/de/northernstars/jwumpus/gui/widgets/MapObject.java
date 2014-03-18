@@ -80,6 +80,12 @@ public class MapObject extends JPanel implements MouseListener {
 				map.setWumpusMapObject(wumpusMapObject);
 			}
 			
+			// set background color
+			if( !wumpusMapObject.isVisited() ){
+				setBackground(Color.GRAY);
+				setOpaque(true);
+			}
+			
 			// Adding label with grid position
 //			JLabel nlabel = new JLabel(wumpusMapObject.getRow() + "," + wumpusMapObject.getColumn());
 //			add(nlabel);
