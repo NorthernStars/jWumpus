@@ -86,7 +86,12 @@ class RunnableAI implements Runnable{
 		if( jWumpus.getAiMap() == null ){
 			logger.debug("creating new ai map");
 			WumpusMap aiMap = new WumpusMap(1, 1, jWumpus.getMap().getMapName());
-			WumpusMapObject player =  new WumpusMapObject( jWumpus.getFirstPlayerWumpusMapObject() );
+			WumpusMapObject defaultPlayer = new WumpusMapObject(0, 0);
+			defaultPlayer.add(WumpusObjects.PLAYER);
+			WumpusMapObject player =  new WumpusMapObject( 
+					(jWumpus.getFirstPlayerWumpusMapObject() != null ?
+							jWumpus.getFirstPlayerWumpusMapObject()
+							: defaultPlayer ) );
 			player.setRow(0);
 			player.setColumn(0);
 			aiMap.setCheckDimension(false);
