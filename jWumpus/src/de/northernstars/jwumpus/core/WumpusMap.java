@@ -109,7 +109,8 @@ public class WumpusMap {
 	 * Gets {@link WumpusMapObject} at specific position
 	 * @param row		Row on map
 	 * @param column	Column on map
-	 * @return {@link WumpusMapObject} at position [{@code row}, {@ode column}] or {@code null} if there is no object
+	 * @return 	{@link WumpusMapObject} at position [{@code row}, {@ode column}],
+	 * 			or {@code null} if there is no object.
 	 */
 	public WumpusMapObject getWumpusMapObject(int row, int column){
 		if( !getCheckDimension() || (row < getRows() && column < getColumns()) ){
@@ -128,12 +129,14 @@ public class WumpusMap {
 	 * Removes a {@link WumpusMapObject} at a specific position at map
 	 * @param row		Row of {@link WumpusMapObject}
 	 * @param column	Column of {@link WumpusMapObject}
+	 * @return This {@link WumpusMap}
 	 */
-	public void removeWumpusMapObject(int row, int column){
+	public WumpusMap removeWumpusMapObject(int row, int column){
 		WumpusMapObject object;
 		while( (object = getWumpusMapObject(row, column)) != null ){
 			getMap().remove(object);
-		}
+		}		
+		return this;
 	}
 	
 	
@@ -146,9 +149,11 @@ public class WumpusMap {
 	
 	/**
 	 * @param mapName the mapName to set
+	 * @return This {@link WumpusMap}
 	 */
-	public void setMapName(String mapName) {
+	public WumpusMap setMapName(String mapName) {
 		this.mapName = mapName;
+		return this;
 	}
 	
 	/**
@@ -160,8 +165,9 @@ public class WumpusMap {
 	
 	/**
 	 * Sets dimension of map depending of elements in {@link List} of {@link WumpusMapObject}
+	 * @return This {@link WumpusMap}
 	 */
-	public void updateDimensions(){
+	public WumpusMap updateDimensions(){
 		int rowMin = 0;
 		int rowMax = 0;
 		int columnMin = 0;
@@ -201,12 +207,14 @@ public class WumpusMap {
 		setColumns( columnMax - columnMin + 1 );
 		
 		setCheckDimension(vCheckDimension);
+		return this;
 	}
 	
 	/**
 	 * Deletes all objects on map that don't fit into dimension
+	 * @return This {@link WumpusMap}
 	 */
-	private void updateMapObjects(){
+	private WumpusMap updateMapObjects(){
 		if( getCheckDimension() ){
 			List<WumpusMapObject> removeMap = new ArrayList<WumpusMapObject>();
 			
@@ -220,14 +228,17 @@ public class WumpusMap {
 			// delete all elements in remove map from map
 			map.removeAll(removeMap);
 		}
+		return this;
 	}
 	
 	/**
 	 * @param rows the rows to set
+	 * @return This {@link WumpusMap}
 	 */
-	public void setRows(int rows) {
+	public WumpusMap setRows(int rows) {
 		this.rows = rows;
 		updateMapObjects();
+		return this;
 	}
 	
 	/**
@@ -239,10 +250,11 @@ public class WumpusMap {
 	
 	/**
 	 * @param columns the columns to set
+	 * @return This {@link WumpusMap}
 	 */
-	public void setColumns(int columns) {
+	public WumpusMap setColumns(int columns) {
 		this.columns = columns;
-		updateMapObjects();
+		return updateMapObjects();
 	}
 	
 	/**
@@ -254,9 +266,11 @@ public class WumpusMap {
 
 	/**
 	 * @param playerArrows the playerArrows to set
+	 * @return This {@link WumpusMap}
 	 */
-	public void setPlayerArrows(int playerArrows) {
+	public WumpusMap setPlayerArrows(int playerArrows) {
 		this.playerArrows = playerArrows;
+		return this;
 	}
 	
 	/**
@@ -268,9 +282,11 @@ public class WumpusMap {
 	
 	/**
 	 * @param map the map to set
+	 * @return This {@link WumpusMap}
 	 */
-	public void setMap(List<WumpusMapObject> map) {
+	public WumpusMap setMap(List<WumpusMapObject> map) {
 		this.map = map;
+		return this;
 	}
 
 	/**
@@ -282,9 +298,11 @@ public class WumpusMap {
 
 	/**
 	 * @param checkDimension the checkDimension to set
+	 * @return This {@link WumpusMap}
 	 */
-	public void setCheckDimension(boolean checkDimension) {
+	public WumpusMap setCheckDimension(boolean checkDimension) {
 		this.checkDimension = checkDimension;
+		return this;
 	}
 	
 	public String toString(){

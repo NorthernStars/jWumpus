@@ -296,24 +296,8 @@ class RunnableAI implements Runnable{
 					wumpus.remove(WumpusObjects.WUMPUS);
 					jWumpus.getMap().setWumpusMapObject(wumpus);
 					
-					// remove stenches
-					WumpusMapObject stench;
-					if( (stench=jWumpus.getMap().getWumpusMapObject(wumpus.getRow()-1, wumpus.getColumn())) != null ){
-						stench.remove(WumpusObjects.STENCH);
-						jWumpus.getMap().setWumpusMapObject( stench );
-					}
-					if( (stench=jWumpus.getMap().getWumpusMapObject(wumpus.getRow()+1, wumpus.getColumn())) != null ){
-						stench.remove(WumpusObjects.STENCH);
-						jWumpus.getMap().setWumpusMapObject( stench );
-					}
-					if( (stench=jWumpus.getMap().getWumpusMapObject(wumpus.getRow(), wumpus.getColumn()-1)) != null ){
-						stench.remove(WumpusObjects.STENCH);
-						jWumpus.getMap().setWumpusMapObject( stench );
-					}
-					if( (stench=jWumpus.getMap().getWumpusMapObject(wumpus.getRow(), wumpus.getColumn()+1)) != null ){
-						stench.remove(WumpusObjects.STENCH);
-						jWumpus.getMap().setWumpusMapObject( stench );
-					}
+					// check stench for remaning wumpus
+					updateWumpusStench();
 					
 					break;
 				}				
@@ -325,6 +309,48 @@ class RunnableAI implements Runnable{
 		}
 		
 		return hit;
+	}
+	
+	/**
+	 * Updates the stenches around all wumpi on map
+	 */
+	private void updateWumpusStench(){	
+		int rows = jWumpus.getMap().getRows();
+		int columns = jWumpus.getMap().getColumns();
+		
+		for( WumpusMapObject mapObject : jWumpus.getMap().getWumpusObjects(WumpusObjects.STENCH) ){
+			jWumpus.getMap().setWumpusMapObject( mapObject.remove(WumpusObjects.STENCH) );
+		}
+		
+		for( WumpusMapObject mapObject : jWumpus.getMap().getWumpusObjects(WumpusObjects.WUMPUS) ){
+			
+			int row = mapObject.getRow();
+			int column = mapObject.getColumn();
+			
+			// set stench around wumpus
+			if(row+ 1 < rows ){
+				WumpusMapObject object = jWumpus.getMap().getWumpusMapObject(row+1, column);
+				object = (object != null ? object : new WumpusMapObject(row+1, column));
+				jWumpus.getMap().setWumpusMapObject( object.add(WumpusObjects.STENCH) );
+			}
+			if( row-1 >= 0 ){
+				WumpusMapObject object = jWumpus.getMap().getWumpusMapObject(row-1, column);
+				object = (object != null ? object : new WumpusMapObject(row-1, column));
+				jWumpus.getMap().setWumpusMapObject( object.add(WumpusObjects.STENCH) );
+			}
+			if( column+1 < columns ){
+				WumpusMapObject object = jWumpus.getMap().getWumpusMapObject(row, column+1);
+				object = (object != null ? object : new WumpusMapObject(row, column+1));
+				jWumpus.getMap().setWumpusMapObject( object.add(WumpusObjects.STENCH) );
+			}
+			if( column-1 >= 0 ){
+				WumpusMapObject object = jWumpus.getMap().getWumpusMapObject(row, column-1);
+				object = (object != null ? object : new WumpusMapObject(row, column-1));
+				jWumpus.getMap().setWumpusMapObject( object.add(WumpusObjects.STENCH) );
+			}
+			
+			
+		}		
 	}
 	
 	

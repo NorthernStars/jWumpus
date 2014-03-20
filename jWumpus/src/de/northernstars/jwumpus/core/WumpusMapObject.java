@@ -50,24 +50,29 @@ public class WumpusMapObject {
 	/**
 	 * Adds a {@link WumpusObjects} to map position
 	 * @param object {@link WumpusObjects}
+	 * @return This {@link WumpusMapObject}
 	 */
-	public void add(WumpusObjects object){
+	public WumpusMapObject add(WumpusObjects object){
 		// remove already set objects
 		remove(object);
 		
 		if( object != WumpusObjects.DELETE ){
 			objectsList.add(object);
 		}
+		
+		return this;
 	}
 	
 	/**
 	 * Removes {@link WumpusObjects} from map position
 	 * @param object {@link WumpusObjects}
+	 * @return This {@link WumpusMapObject}
 	 */
-	public void remove(WumpusObjects object){
+	public WumpusMapObject remove(WumpusObjects object){
 		while( contains(object) ){
 			objectsList.remove(object);
-		}
+		}		
+		return this;
 	}
 	
 	/**
@@ -88,9 +93,11 @@ public class WumpusMapObject {
 
 	/**
 	 * @param row the row to set
+	 * @return This {@link WumpusMapObject}
 	 */
-	public void setRow(int row) {
+	public WumpusMapObject setRow(int row) {
 		this.row = row;
+		return this;
 	}
 
 	/**
@@ -102,9 +109,11 @@ public class WumpusMapObject {
 
 	/**
 	 * @param column the column to set
+	 * @return This {@link WumpusMapObject}
 	 */
-	public void setColumn(int column) {
+	public WumpusMapObject setColumn(int column) {
 		this.column = column;
+		return this;
 	}
 
 	/**
@@ -116,9 +125,11 @@ public class WumpusMapObject {
 
 	/**
 	 * @param objectsList the objectsList to set
+	 * @return This {@link WumpusMapObject}
 	 */
-	public void setObjectsList(List<WumpusObjects> objectsList) {
+	public WumpusMapObject setObjectsList(List<WumpusObjects> objectsList) {
 		this.objectsList = objectsList;
+		return this;
 	}
 	
 	public String toString(){
@@ -138,9 +149,11 @@ public class WumpusMapObject {
 
 	/**
 	 * @param visited the visited to set
+	 * @return This {@link WumpusMapObject}
 	 */
-	public void setVisited(boolean visited) {
+	public WumpusMapObject setVisited(boolean visited) {
 		this.visited = visited;
+		return this;
 	}
 	
 }
