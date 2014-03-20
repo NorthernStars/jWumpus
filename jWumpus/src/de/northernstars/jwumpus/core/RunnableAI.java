@@ -383,7 +383,7 @@ class RunnableAI implements Runnable{
 					
 					// check if player can move
 					if( positions.get(0)[0] >= 0 && positions.get(0)[0] < jWumpus.getMap().getRows()
-							&& positions.get(0)[1] >= 0 && positions.get(0)[1] < jWumpus.getMap().getRows() ){
+							&& positions.get(0)[1] >= 0 && positions.get(0)[1] < jWumpus.getMap().getColumns() ){
 						
 						// move players
 						movePlayers(player, aiPlayer, positions);
