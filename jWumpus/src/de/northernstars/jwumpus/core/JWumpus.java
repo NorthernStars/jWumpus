@@ -26,6 +26,7 @@ import de.northernstars.jwumpus.gui.listener.JWumpusControl;
 public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	
 	public static long timeoutAI = 5000;
+	public static int maxTimeouts = 3;
 	
 	private static final Logger logger = LogManager.getLogger(JWumpus.class);
 	private MainFrame gui;
@@ -38,6 +39,7 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	private PlayerState playerState;
 	private int playerArrows = 0;
 	private int aiSteps = 0;
+	private int timeouts = 0;
 	
 	/**
 	 * Constructor
@@ -181,8 +183,9 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 			setAiSteps(0);
 			setPlayerState(PlayerState.UNKNOWN);
 			setAiMap(null);
-			mapLoaded(vMap);
+			setTimeouts(0);
 			runnableAI = null;
+			mapLoaded(vMap);			
 			
 			// update AI
 			if( ai != null ){
@@ -216,10 +219,15 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 
 	@Override
 	public void mapLoaded(WumpusMap map) {
-		this.map = new WumpusMap(map);
-		vMap = new WumpusMap(map);
-		setPlayerArrows(this.map.getPlayerArrows());
-		updateGui();
+		if( runnableAI == null ){
+			this.map = new WumpusMap(map);
+			vMap = new WumpusMap(map);
+			setPlayerArrows(this.map.getPlayerArrows());
+			updateGui();
+		}
+		else{
+			resetAI();
+		}
 	}
 
 	@Override
@@ -307,6 +315,20 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	 */
 	protected void setPlayerArrows(int playerArrows) {
 		this.playerArrows = playerArrows;
+	}
+	
+	/**
+	 * @return the timeouts
+	 */
+	protected int getTimeouts() {
+		return timeouts;
+	}
+
+	/**
+	 * @param timeouts the timeouts to set
+	 */
+	protected void setTimeouts(int timeouts) {
+		this.timeouts = timeouts;
 	}
 	
 	/**

@@ -146,6 +146,7 @@ class RunnableAI implements Runnable{
 			// check for timeout
 			if( timeoutTime >= JWumpus.timeoutAI ){
 				jWumpus.getAi().putLastActionSuccess(ActionSuccess.TIMEOUT);
+				jWumpus.setTimeouts( jWumpus.getTimeouts()+1 );
 				return null;
 			}
 			
@@ -362,7 +363,9 @@ class RunnableAI implements Runnable{
 			while( pause );
 			
 			// check player state
-			if( jWumpus.getPlayerState() == PlayerState.DEAD ){
+			if( jWumpus.getPlayerState() == PlayerState.DEAD
+					|| jWumpus.getTimeouts() >= JWumpus.maxTimeouts ){
+				jWumpus.getAi().putPlayerState(PlayerState.DEAD);
 				break;
 			}
 			
