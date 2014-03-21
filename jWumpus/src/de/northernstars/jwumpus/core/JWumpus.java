@@ -91,7 +91,7 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	 * @param condition {@link WinConditions} or null if to use maps default {@link WinConditions}
 	 * @return {@code true} if AIs map fits {@link #winCondition}
 	 */
-	public boolean checkWinCondition(WinConditions condition){
+	protected boolean checkWinCondition(WinConditions condition){
 		if( getMap() != null && getAiMap() != null ){		
 			switch( (condition != null ? condition : getMap().getWinCondition()) ){
 			

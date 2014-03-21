@@ -437,9 +437,15 @@ class RunnableAI implements Runnable{
 					}
 					else{
 						jWumpus.getAi().putLastActionSuccess(ActionSuccess.FAILED);
-						logger.debug("Shoot wumpus failed!");
+						logger.debug("Shooting wumpus failed!");
 					}
 					
+				}
+				
+				// check if player wins
+				if( jWumpus.getPlayerState() != PlayerState.DEAD ){
+					active = false;
+					jWumpus.setPlayerState(PlayerState.WINNER);
 				}
 				
 			}

@@ -56,6 +56,7 @@ public class WumpusMap {
 		setPlayerArrows( map.getPlayerArrows() );
 		setMaxTimeouts( map.getMaxTimeouts() );
 		setMaxTimeoutTime( map.getMaxTimeoutTime() );
+		setWinCondition( map.getWinCondition() );
 	}
 	
 	/**
