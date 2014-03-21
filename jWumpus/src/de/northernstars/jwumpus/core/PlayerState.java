@@ -6,6 +6,8 @@ public enum PlayerState {
 	RICH,
 	DEAD,
 	
+	WINNER,
+	
 	UNKNOWN;
 	
 }
