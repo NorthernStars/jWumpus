@@ -7,11 +7,12 @@
     <meta name="description" content="jWumpus : Java based wumpus game for artifical intelligences" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <script type="text/JavaScript" src="javascripts/main.js"></script> 
 
     <title>jWumpus - Installation/Usage</title>
   </head>
 
-  <body>
+  <body onload="checkJavaSyntax()">
 
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
@@ -32,19 +33,146 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">      
-      	<a class="back" href="javascript: history.back()">Back</a><br />
+      <a class="back" href="javascript: history.back()">Back</a><br />
       
       	<h2><span class="octicon octicon-link"></span>Installation</h2>
 		<p>To start with with jWumpus, download the <a href="https://github.com/NorthernStars/jWumpus/raw/master/jWumpus.jar">latest binary release</a>.<br />
 		You can also use the <a href="https://github.com/NorthernStars/jWumpus/releases">github release page</a> to get more information about a release.</p>
 		
 		<p>After that you need to include the downloaded <i>jWumpus.jar</i> into your build path.<br />
-		If you are using eclipse, just import <i>jWUmpus.jar</i> into your workspace and use<br />
+		If you are using eclipse, just import <i>jWumpus.jar</i> into your workspace and use<br />
 		<i>Right-click on jWumpus.jar > Build path > Add to build path</i>.</p>
 		
+		
+		
+		
 		<h2><span class="octicon octicon-link"></span>Usage</h2>
-		<p></p>
-      
+		<p>jWumpus offers different options to implement an own artificial intelligence (ai).
+		The easiest way is to use the build in graphical user interface (gui) to control everthing like processing steps of the ai, loading maps, ...<br />
+		It's also possible to do this by your own. Take a look at the <a href="examples.html">exampels</a> to know more about this.</p>
+		
+		<p>Generally an instance of the class <code>JWumpus</code> from package <code>de.northernstars.jwumpus.core</code>
+		handles the maps, checking of correct ai responses and other things.
+		It also interacts with the ai to set the current state or current map.</p>
+		
+		<h3>Game processing</h3>
+		<p>After a game map is loaded the ai gets a subset of the map from jWumpus including every field it visited before.
+		So on start it gets only the start field. After that the ai is asked for an action to do as next step.
+		Than the ai player moves to the next field accordingly to the last step and the ai gets the updated map,
+		including the new field the player has moved to, and again jWumpus requests the next step of the ai and so on.</p>
+		
+		<h3>Implementing an artificial intelligence</h3>
+		<p>Create a class for your ai and implement the interface <code>WumpusAI</code> from package <code>de.northernstars.jwumpus.core</code>.
+		This interface includes some functions to control the behaviour of th ai.</p>
+		
+		<p><b>putWumpusWorldMap(WumpusMap map)</b><br />
+		Is used to set a new map. The ai should store a copy of that map.</p>
+		
+		<p><b>putLastActionSuccess(ActionSuccess actionSuccess)</b><br />
+		Puts information about the successfull execution of the last step.<br />
+		The action of the last step could be <i>FAILED</i>, <i>SUCCESSFULL</i>,
+		<i>HIT_WALL</i> (after trying to move to a field that is out of bounds of the map),
+		<i>WUMPUS_DEAD</i> (after successfully shooting into one direction)
+		or <i>TIMEOUT</i> (if the ai response for that step wasn't fast enough).</p>
+		
+		<p><b>putRemainingTime(long time)</b><br />
+		Sets remaining time in milliseconds until the ai has to return an action for the next step.</p>
+		
+		<p><b>putPlayerArrows(int arrows)</b><br />
+		Sets the number of remaining arrows of the ai player.</p>
+		
+		<p><b>getAction()</b><br />
+		Is called if the ai has to return an action for the next step.<br />
+		The ai has a specified time to calculate an action like, moving up, down, left, right or shooting up, down, left or right.
+		If the ai doesn't answer within time, no action is performed.</p>
+		
+		<p><b>putPlayerState(PlayerState playerState)</b><br />
+		Sets the state of the player on the field.<br />
+		The player normally would be <i>ALIVE</i>.
+		If he finds a gold field, he gets <i>RICH</i>, if he moves into a trap or a wumpus he is <i>DEAD</i>.
+		If the game is ofer and ai player is not dead, he gets the status <i>WINNER</i>.</p>
+		
+		<p><b>resetAi()</b><br />
+		Is called if to reset the ai for maybe restarting the game or other reasons.
+		The ai should erase or reset all calculated data (including the game map).</p>
+		
+		<p><b>Default ai class template:</b></p>
+		
+<pre>
+public class MyAi implements WumpusAI{
+	private WumpusMap map;
+	private long remainingTime = 0;
+	private int remainingArrows = 0;
+	private ActionSuccess lastActionSuccess = ActionSuccess.SUCCESSFULL;
+	private PlayerState playerState = PlayerState.UNKNOWN;
+	
+	@Override
+	public void putWumpusWorldMap(WumpusMap map) {
+		this.map = new WumpusMap(map);
+	}
+
+	@Override
+	public void putLastActionSuccess(ActionSuccess actionSuccess) {
+		lastActionSuccess = actionSuccess;
+	}
+
+	@Override
+	public void putRemainingTime(long time) {
+		remainingTime = time;
+	}
+
+	@Override
+	public void putPlayerArrows(int arrows) {
+		remainingArrows = arrows;
+	}
+
+	@Override
+	public Action getAction() {
+		// Returns no action to do nothing
+		return Action.NO_ACTION;
+	}
+
+	@Override
+	public void putPlayerState(PlayerState playerState) {
+		this.playerState = playerState;
+	}
+
+	@Override
+	public void resetAi() {
+		map = null;
+		playerState = PlayerState.UNKNOWN;
+	}
+}
+</pre>
+		
+		<h3>The map</h3>
+		<p>The wumpus world is implemented inside a <code>WumpusMap</code> that stores a list of <code>WumpusMapObject</code>.
+		The <i>WumpusMapObject</i> contains a list of items of <code>WumpusObjects</code> that descripe
+		the content on the field the <i>WumpusMapObject</i> represents.
+		An object on a field could be a <i>PLAYER</i>, <i>WUMPUS</i>, <i>GOLD</i>, <i>TRAP</i>, <i>BREEZE</i>,
+		<i>STENCH</i>, <i>TWINKLE</i>.</p>
+		
+		<p>The <i>WumpusMapObject</i> as three attributes. The <i>row</i> and the <i>column</i> are describing
+		the position of the object on the <i>WumpusMap</i>. The boolean attribute <i>visited</i> is <i>true</i>
+		if the player visited this field on the map.</p>
+		
+		
+		<h3>Starting jWumpus</h3>
+		<p>To start jWumpus an instane of <code>JWumpus</code> class from package <code>de.northernstars.jwumpus.core</code> is needed.
+		The constructor of <i>JWumpus</i> class needs an instance of the ai.</p>
+		
+		<p><b>Example:</b></p>
+		
+<pre>
+public static void main(String[] args) {
+	// Create new instance of JWumpus and pass instance of AI as parameter 
+	new JWumpus( new ExampleAI() );
+}
+</pre>
+
+		<p><b>See also <a href="examples.html">examples</a></b>
+		
+      	<p><br /><a class="back" href="javascript: history.back()">Back</a><br /></p>
       </section>
     </div>
 
