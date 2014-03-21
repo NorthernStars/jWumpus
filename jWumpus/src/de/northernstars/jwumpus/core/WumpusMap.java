@@ -18,6 +18,7 @@ public class WumpusMap {
 	private boolean checkDimension = true;
 	private int maxTimeouts = 3;
 	private long maxTimeoutTime = 10;		// timeout time in milliseconds
+	private WinConditions winCondition = WinConditions.GOLDS_FOUND;
 	
 	/**
 	 * Constructor
@@ -335,6 +336,20 @@ public class WumpusMap {
 	 */
 	public void setMaxTimeoutTime(long timeoutTime) {
 		this.maxTimeoutTime = timeoutTime;
+	}
+	
+	/**
+	 * @return the winCondition
+	 */
+	public WinConditions getWinCondition() {
+		return winCondition;
+	}
+
+	/**
+	 * @param winCondition the winCondition to set
+	 */
+	public void setWinCondition(WinConditions winCondition) {
+		this.winCondition = winCondition;
 	}
 	
 	

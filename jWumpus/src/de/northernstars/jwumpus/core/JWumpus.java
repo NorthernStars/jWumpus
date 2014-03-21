@@ -86,6 +86,65 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 		return null;
 	}
 	
+	/**
+	 * Checks if a {@link WinConditions} fits to current AIs map
+	 * @param condition {@link WinConditions} or null if to use maps default {@link WinConditions}
+	 * @return {@code true} if AIs map fits {@link #winCondition}
+	 */
+	public boolean checkWinCondition(WinConditions condition){
+		if( getMap() != null && getAiMap() != null ){		
+			switch( (condition != null ? condition : getMap().getWinCondition()) ){
+			
+			case FIELDS_VISITED:
+				WumpusMap vAiMap = new WumpusMap(getAiMap());
+				vAiMap.updateDimensions();
+				vAiMap.setCheckDimension(true);
+				
+				for( int row=0; row<getMap().getRows(); row++ ){
+					for( int column=0; column<getMap().getColumns(); column++ ){
+						WumpusMapObject aiObj = vAiMap.getWumpusMapObject(row, column);
+						WumpusMapObject mapObj = getMap().getWumpusMapObject(row, column);
+						
+						if( aiObj == null && mapObj == null ){
+							return false;
+						}
+						else if( aiObj == null && !mapObj.contains(WumpusObjects.TRAP)
+								&& !mapObj.contains(WumpusObjects.WUMPUS) ){
+							return false;
+						}
+						else if( aiObj != null ){
+							if( !aiObj.isVisited() && mapObj == null ){
+								return false;
+							}
+							else if( !aiObj.isVisited() && !mapObj.contains(WumpusObjects.TRAP)
+									&& !mapObj.contains(WumpusObjects.WUMPUS) ){
+								return false;
+							}
+						}
+					}
+				}
+				return true;
+				
+			case GOLDS_FOUND:
+				return getMap().getWumpusObjects(WumpusObjects.GOLD).size() == getAiMap().getWumpusObjects(WumpusObjects.GOLD).size();
+				
+			case WUMPI_DEAD:
+				return getMap().getWumpusObjects(WumpusObjects.WUMPUS).size() == 0;
+				
+			case WUMPI_DEAD_AND_FIELDS_VISITED:
+				return checkWinCondition(WinConditions.WUMPI_DEAD)
+						&& checkWinCondition(WinConditions.FIELDS_VISITED);
+				
+			case WUMPI_DEAD_AND_GOLDS_FOUND:
+				return checkWinCondition(WinConditions.WUMPI_DEAD)
+						&& checkWinCondition(WinConditions.GOLDS_FOUND);
+			}			
+		}
+		
+		return false;
+	}
+	
+	
 	@Override
 	public int getNumOfWumpi(){
 		return getMap().getWumpusObjects(WumpusObjects.WUMPUS).size();
@@ -326,7 +385,8 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	 */
 	protected void setTimeouts(int timeouts) {
 		this.timeouts = timeouts;
-	}
+	}	
+	
 	
 	/**
 	 * Loads a {@link WumpusMap} from file.
@@ -341,7 +401,7 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 				map = (new Gson()).fromJson(new FileReader(file), WumpusMap.class);
 				logger.debug("Loaded map " + map.getMapName());
 			}
-			else{
+			else if(file != null){
 				logger.error("Can not read from file " + file.getPath());
 			}
 		}catch (FileNotFoundException e){

@@ -12,6 +12,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 
+import de.northernstars.jwumpus.core.WinConditions;
 import de.northernstars.jwumpus.core.WumpusMap;
 import de.northernstars.jwumpus.core.WumpusObjects;
 import de.northernstars.jwumpus.gui.widgets.PaletteButton;
@@ -22,6 +23,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.GridLayout;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -49,6 +51,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+import javax.swing.JComboBox;
 
 @SuppressWarnings("serial")
 public class Editor extends JFrame {
@@ -82,6 +85,8 @@ public class Editor extends JFrame {
 	private JTextField txtMaxTimeouts;
 	private JLabel lblMaxTimeoutTime;
 	private JTextField txtMaxTimeoutTime;
+	private JLabel lblWinCondition;
+	private JComboBox<WinConditions> cmbWinCondition;
 	
 	/**
 	 * Launches the editor.
@@ -195,11 +200,15 @@ public class Editor extends JFrame {
 		contentPane.add(panelMapData, "4, 2, fill, fill");
 		panelMapData.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
+				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -241,6 +250,7 @@ public class Editor extends JFrame {
 				int playerArrows = getPlayerArrowsFromGui();
 				int maxTimeouts = getMaxTimeouts();
 				long timeoutTime = getMaxTimeoutTime();
+				WinConditions winCondition = cmbWinCondition.getItemAt( cmbWinCondition.getSelectedIndex() );
 				String mapName = txtMapName.getText();
 				
 				if( map != null
@@ -251,6 +261,7 @@ public class Editor extends JFrame {
 					map.setPlayerArrows(playerArrows);
 					map.setMaxTimeouts(maxTimeouts);
 					map.setMaxTimeoutTime(timeoutTime);
+					map.setWinCondition(winCondition);
 					updateGuiMap();
 				}
 			}
@@ -291,7 +302,15 @@ public class Editor extends JFrame {
 		txtMaxTimeoutTime.setText("10");
 		panelMapData.add(txtMaxTimeoutTime, "4, 12, fill, default");
 		txtMaxTimeoutTime.setColumns(10);
-		panelMapData.add(btnUpdateMap, "2, 14, 3, 1");
+		
+		lblWinCondition = new JLabel("Win condition:");
+		lblWinCondition.setHorizontalAlignment(SwingConstants.CENTER);
+		panelMapData.add(lblWinCondition, "2, 14, 3, 1");
+		
+		cmbWinCondition = new JComboBox<WinConditions>();
+		cmbWinCondition.setModel( new DefaultComboBoxModel<WinConditions>(WinConditions.values()) );
+		panelMapData.add(cmbWinCondition, "2, 16, 3, 1, fill, default");
+		panelMapData.add(btnUpdateMap, "2, 18, 3, 1");
 		
 		panelPaletteTop = new JScrollPane();
 		panelPaletteTop.setBorder(new TitledBorder(null, "Palette", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -501,6 +520,7 @@ public class Editor extends JFrame {
 			txtMapName.setText( map.getMapName() );
 			txtMaxTimeouts.setText( Integer.toString(map.getMaxTimeouts()) );
 			txtMaxTimeoutTime.setText( Long.toString(map.getMaxTimeoutTime()) );
+			cmbWinCondition.setSelectedIndex( map.getWinCondition().ordinal() );
 			setTitle(title + " - " + map.getMapName());
 			
 			// update gui map
