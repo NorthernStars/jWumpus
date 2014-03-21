@@ -78,6 +78,10 @@ public class Editor extends JFrame {
 	private JPanel panelPalette;
 	private JLabel lblPlayerArrows;
 	private JTextField txtPlayerArrows;
+	private JLabel lblMaxTimeouts;
+	private JTextField txtMaxTimeouts;
+	private JLabel lblMaxTimeoutTime;
+	private JTextField txtMaxTimeoutTime;
 	
 	/**
 	 * Launches the editor.
@@ -206,6 +210,10 @@ public class Editor extends JFrame {
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 		
 		JLabel lblNewLabel1 = new JLabel("Columns:");
@@ -231,6 +239,8 @@ public class Editor extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int mapDimension[] = getMapDimensionFromGui();
 				int playerArrows = getPlayerArrowsFromGui();
+				int maxTimeouts = getMaxTimeouts();
+				long timeoutTime = getMaxTimeoutTime();
 				String mapName = txtMapName.getText();
 				
 				if( map != null
@@ -239,6 +249,8 @@ public class Editor extends JFrame {
 					map.setColumns(mapDimension[1]);
 					map.setMapName(mapName);
 					map.setPlayerArrows(playerArrows);
+					map.setMaxTimeouts(maxTimeouts);
+					map.setMaxTimeoutTime(timeoutTime);
 					updateGuiMap();
 				}
 			}
@@ -261,7 +273,25 @@ public class Editor extends JFrame {
 		txtPlayerArrows.setText("1");
 		panelMapData.add(txtPlayerArrows, "4, 8, fill, default");
 		txtPlayerArrows.setColumns(10);
-		panelMapData.add(btnUpdateMap, "2, 10, 3, 1");
+		
+		lblMaxTimeouts = new JLabel("Max timeouts:");
+		lblMaxTimeouts.setHorizontalAlignment(SwingConstants.RIGHT);
+		panelMapData.add(lblMaxTimeouts, "2, 10, right, default");
+		
+		txtMaxTimeouts = new JTextField();
+		txtMaxTimeouts.setText("3");
+		panelMapData.add(txtMaxTimeouts, "4, 10, fill, default");
+		txtMaxTimeouts.setColumns(10);
+		
+		lblMaxTimeoutTime = new JLabel("Max timeout time [ms]:");
+		lblMaxTimeoutTime.setHorizontalAlignment(SwingConstants.RIGHT);
+		panelMapData.add(lblMaxTimeoutTime, "2, 12, right, default");
+		
+		txtMaxTimeoutTime = new JTextField();
+		txtMaxTimeoutTime.setText("10");
+		panelMapData.add(txtMaxTimeoutTime, "4, 12, fill, default");
+		txtMaxTimeoutTime.setColumns(10);
+		panelMapData.add(btnUpdateMap, "2, 14, 3, 1");
 		
 		panelPaletteTop = new JScrollPane();
 		panelPaletteTop.setBorder(new TitledBorder(null, "Palette", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -325,6 +355,34 @@ public class Editor extends JFrame {
 		}
 		
 		return 0;
+	}
+	
+	/**
+	 * @return {@link Integer} maximum number of timeouts before player is dead
+	 */
+	private int getMaxTimeouts(){
+		try{
+			int timeouts = Integer.parseInt(txtMaxTimeouts.getText());
+			return timeouts;
+		}catch (NumberFormatException e){
+			logger.error("Max timeouts is no integer value");
+		}
+		
+		return 3;
+	}
+	
+	/**
+	 * @return {@link Long} of maximum response time of ai
+	 */
+	private long getMaxTimeoutTime(){
+		try{
+			long timeout = Long.parseLong(txtMaxTimeoutTime.getText());
+			return timeout;
+		}catch (NumberFormatException e){
+			logger.error("Max timeouts is no number");
+		}
+		
+		return 10;
 	}
 	
 	/**
@@ -441,6 +499,8 @@ public class Editor extends JFrame {
 			txtRows.setText( Integer.toString(map.getRows()) );
 			txtColumns.setText( Integer.toString(map.getColumns()) );
 			txtMapName.setText( map.getMapName() );
+			txtMaxTimeouts.setText( Integer.toString(map.getMaxTimeouts()) );
+			txtMaxTimeoutTime.setText( Long.toString(map.getMaxTimeoutTime()) );
 			setTitle(title + " - " + map.getMapName());
 			
 			// update gui map

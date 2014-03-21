@@ -25,9 +25,6 @@ import de.northernstars.jwumpus.gui.listener.JWumpusControl;
  */
 public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	
-	public static long timeoutAI = 5000;
-	public static int maxTimeouts = 3;
-	
 	private static final Logger logger = LogManager.getLogger(JWumpus.class);
 	private MainFrame gui;
 	private RunnableAI runnableAI;
@@ -178,7 +175,7 @@ public class JWumpus implements FrameLoadedListener, JWumpusControl {
 			// wait for AI thread to stop
 			long tm = System.currentTimeMillis();
 			while( runnableAI.isActive()
-					&& System.currentTimeMillis()-tm < timeoutAI );
+					&& System.currentTimeMillis()-tm < (getMap() != null ? getMap().getMaxTimeoutTime() : 1000) );
 			
 			setAiSteps(0);
 			setPlayerState(PlayerState.UNKNOWN);

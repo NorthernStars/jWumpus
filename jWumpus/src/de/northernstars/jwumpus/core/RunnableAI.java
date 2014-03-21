@@ -96,7 +96,9 @@ class RunnableAI implements Runnable{
 			player.setColumn(0);
 			aiMap.setCheckDimension(false);
 			aiMap.setWumpusMapObject( player );
-			jWumpus.setAiMap(aiMap);
+			aiMap.setMaxTimeouts( jWumpus.getMap().getMaxTimeouts() );
+			aiMap.setMaxTimeoutTime( jWumpus.getMap().getMaxTimeoutTime() );
+			jWumpus.setAiMap( aiMap );
 		}
 	}
 	
@@ -121,7 +123,7 @@ class RunnableAI implements Runnable{
 			 * If pause set until waiting for Action. Do noting.
 			 */				
 			while( active && ((process.action == null
-					&& (timeoutTime = System.currentTimeMillis()-tm) < JWumpus.timeoutAI)
+					&& (timeoutTime = System.currentTimeMillis()-tm) < jWumpus.getMap().getMaxTimeoutTime())
 					|| pause) ){
 				
 				if( !pause ){
@@ -144,7 +146,7 @@ class RunnableAI implements Runnable{
 			action = process.action;
 			
 			// check for timeout
-			if( timeoutTime >= JWumpus.timeoutAI ){
+			if( timeoutTime >= jWumpus.getMap().getMaxTimeoutTime() ){
 				jWumpus.getAi().putLastActionSuccess(ActionSuccess.TIMEOUT);
 				jWumpus.setTimeouts( jWumpus.getTimeouts()+1 );
 				return null;
@@ -364,7 +366,7 @@ class RunnableAI implements Runnable{
 			
 			// check player state
 			if( jWumpus.getPlayerState() == PlayerState.DEAD
-					|| jWumpus.getTimeouts() >= JWumpus.maxTimeouts ){
+					|| jWumpus.getTimeouts() >= jWumpus.getMap().getMaxTimeouts() ){
 				jWumpus.getAi().putPlayerState(PlayerState.DEAD);
 				break;
 			}

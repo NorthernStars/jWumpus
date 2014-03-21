@@ -16,6 +16,8 @@ public class WumpusMap {
 	private int playerArrows = 1;
 	private List<WumpusMapObject> map = new ArrayList<WumpusMapObject>();
 	private boolean checkDimension = true;
+	private int maxTimeouts = 3;
+	private long maxTimeoutTime = 10;		// timeout time in milliseconds
 	
 	/**
 	 * Constructor
@@ -50,7 +52,9 @@ public class WumpusMap {
 			setWumpusMapObject( new WumpusMapObject(mapObject) );
 		}
 		setCheckDimension( map.getCheckDimension() );
-		setPlayerArrows(map.getPlayerArrows());
+		setPlayerArrows( map.getPlayerArrows() );
+		setMaxTimeouts( map.getMaxTimeouts() );
+		setMaxTimeoutTime( map.getMaxTimeoutTime() );
 	}
 	
 	/**
@@ -304,6 +308,36 @@ public class WumpusMap {
 		this.checkDimension = checkDimension;
 		return this;
 	}
+	
+	/**
+	 * @return the maxTimeouts
+	 */
+	public int getMaxTimeouts() {
+		return maxTimeouts;
+	}
+
+	/**
+	 * @param maxTimeouts the maxTimeouts to set
+	 */
+	public void setMaxTimeouts(int maxTimeouts) {
+		this.maxTimeouts = maxTimeouts;
+	}
+	
+	/**
+	 * @return the maxTimeoutTime
+	 */
+	public long getMaxTimeoutTime() {
+		return maxTimeoutTime;
+	}
+
+	/**
+	 * @param maxTimeoutTime the maxTimeoutTime to set
+	 */
+	public void setMaxTimeoutTime(long timeoutTime) {
+		this.maxTimeoutTime = timeoutTime;
+	}
+	
+	
 	
 	public String toString(){
 		String ret = getRows() + "," + getColumns() + ": " + getMapName();

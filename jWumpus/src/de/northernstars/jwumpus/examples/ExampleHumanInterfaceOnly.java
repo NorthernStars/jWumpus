@@ -56,12 +56,7 @@ class ExampleAiNoGui implements WumpusAI, FrameLoadedListener, ActionListener{
 	/**
 	 * Consctrutor
 	 */
-	public ExampleAiNoGui() {
-		/* Set new timeout for AI answer.
-		 * Otherwise human can not decide fast enough
-		 */
-		JWumpus.timeoutAI = 30000;	// 30 sec. timeout
-		
+	public ExampleAiNoGui() {		
 		// show human interface gui
 		HumanInterface.showHumanInterface(this);
 	}
@@ -194,8 +189,8 @@ class ExampleAiNoGui implements WumpusAI, FrameLoadedListener, ActionListener{
 	public void putRemainingTime(long time) {
 		// update remaining time on gui progressbar
 		if( gui != null ){
-			gui.pgbRemainingTime.setMaximum( (int) JWumpus.timeoutAI );
-			gui.pgbRemainingTime.setValue( (int) (JWumpus.timeoutAI - time) );
+			gui.pgbRemainingTime.setMaximum( (int) mMap.getMaxTimeoutTime() );
+			gui.pgbRemainingTime.setValue( (int) (mMap.getMaxTimeoutTime() - time) );
 		}
 	}
 	
