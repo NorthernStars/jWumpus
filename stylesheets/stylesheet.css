@@ -195,6 +195,12 @@ code {
   box-shadow: 0 0 10px rgba(0,0,0,.1);
 }
 
+.preButtonLink {
+	display: block;
+	width: 100%;
+	text-align: right;	
+}
+
 pre code {
   display: block;
   box-shadow: none;
