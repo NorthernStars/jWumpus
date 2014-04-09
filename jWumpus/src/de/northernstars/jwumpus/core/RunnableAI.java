@@ -443,7 +443,8 @@ class RunnableAI implements Runnable{
 				}
 				
 				// check if player wins
-				if( jWumpus.getPlayerState() != PlayerState.DEAD ){
+				if( jWumpus.checkWinCondition(jWumpus.getMap().getWinCondition())
+						&& jWumpus.getPlayerState() != PlayerState.DEAD ){
 					active = false;
 					jWumpus.setPlayerState(PlayerState.WINNER);
 				}
