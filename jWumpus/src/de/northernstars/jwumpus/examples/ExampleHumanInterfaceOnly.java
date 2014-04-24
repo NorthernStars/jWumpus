@@ -45,7 +45,7 @@ class ExampleAiNoGui implements WumpusAI, FrameLoadedListener, ActionListener{
 	 */
 	protected static JWumpusControl jWumpus;
 	
-	private Logger logger = LogManager.getLogger(ExampleAI.class);
+	private Logger logger = LogManager.getLogger();
 	private HumanInterface gui;
 	
 	private WumpusMap mMap;

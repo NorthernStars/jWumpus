@@ -37,7 +37,7 @@ public class ExampleHumanInterface {
  */
 class ExampleAI implements WumpusAI, FrameLoadedListener, ActionListener{
 	
-	private Logger logger = LogManager.getLogger(ExampleAI.class);
+	private Logger logger = LogManager.getLogger();
 	private HumanInterface gui;
 	
 	private WumpusMap mMap;

@@ -14,7 +14,7 @@ public /**
  */
 class RunnableAI implements Runnable{
 
-	private static final Logger logger = LogManager.getLogger(RunnableAI.class);
+	private static final Logger logger = LogManager.getLogger();
 	private boolean active = true;
 	private boolean pause = false;
 	private JWumpus jWumpus;

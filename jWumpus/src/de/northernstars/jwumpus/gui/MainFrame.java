@@ -51,7 +51,7 @@ import java.io.File;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
-	private static final Logger logger = LogManager.getLogger(MainFrame.class);
+	private static final Logger logger = LogManager.getLogger();
 	private static final String title = "jWumpus";
 	private JWumpusControl control;
 	

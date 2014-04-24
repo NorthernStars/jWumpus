@@ -25,7 +25,7 @@ import de.northernstars.jwumpus.gui.listener.JWumpusControl;
  */
 public class JWumpus implements FrameLoadedListener, JWumpusControl {
 	
-	private static final Logger logger = LogManager.getLogger(JWumpus.class);
+	private static final Logger logger = LogManager.getLogger();
 	private MainFrame gui;
 	private RunnableAI runnableAI;
 	

@@ -24,7 +24,7 @@ import de.northernstars.jwumpus.gui.Editor;
 @SuppressWarnings("serial")
 public class MapObject extends JPanel implements MouseListener {
 
-	private static final Logger logger = LogManager.getLogger(MapObject.class);
+	private static final Logger logger = LogManager.getLogger();
 	private Editor editor;
 	private WumpusMap map;
 	private WumpusMapObject wumpusMapObject;

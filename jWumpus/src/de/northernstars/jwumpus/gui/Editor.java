@@ -56,7 +56,7 @@ import javax.swing.JComboBox;
 @SuppressWarnings("serial")
 public class Editor extends JFrame {
 	
-	private static final Logger logger = LogManager.getLogger(Editor.class);
+	private static final Logger logger = LogManager.getLogger();
 	private static final String title = "Map Editor";
 	
 	private WumpusMap map = null;
